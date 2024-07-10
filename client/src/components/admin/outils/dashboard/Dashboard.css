@@ -1,0 +1,22 @@
+/* Dashboard.css */
+
+.dashboard-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+  
+  .chart-container {
+    flex: 1 1 50%;
+    height: 300px;
+    max-width: 400px;
+    margin: 10px;
+    margin-top: 10vh;
+  }
+  
+  @media (min-width: 768px) {
+    .chart-container {
+      flex: 1 1 50%;
+    }
+  }
+  
