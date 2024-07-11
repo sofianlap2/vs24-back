@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const BlacklistedToken = require("../models/blackListedToken");
+//const BlacklistedToken = require("../models/blackListedToken");
 const jwt = require("jsonwebtoken");
 
 async function authorisation(req, res, next) {
@@ -27,11 +27,11 @@ async function authorisation(req, res, next) {
       req.userId = user._id; // Add user ID to the request object
       req.userRole = user.role;
       req.userVerified = user.verified;
-      const isTokenBlacklisted = await BlacklistedToken.exists({ token });
+      // const isTokenBlacklisted = await BlacklistedToken.exists({ token });
 
-      if (isTokenBlacklisted) {
-        return res.status(401).json({ message: "Token invalide" });
-      }
+      // if (isTokenBlacklisted) {
+      //   return res.status(401).json({ message: "Token invalide" });
+      // }
 
       next();
     } catch (error) {
