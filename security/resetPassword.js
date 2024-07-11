@@ -4,7 +4,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const sendEmail = require("../config/sendEmail ");
-const BlacklistedToken = require("../models/blacklistedToken");
+//const BlacklistedToken = require("../models/blacklistedToken");
 const asyncErrorHandler = require("./asyncErrorHandler");
 require('dotenv').config();
 
@@ -49,10 +49,10 @@ router.post("/reset/:token", asyncErrorHandler(async (req, res) => {
       return res.status(400).json({ message: "Token invalide ou expiré" });
     }
 
-    const isTokenBlacklisted = await BlacklistedToken.exists({ token: decodedToken });
-    if (isTokenBlacklisted) {
-      return res.status(401).json({ message: "token non valide" });
-    }
+    // const isTokenBlacklisted = await BlacklistedToken.exists({ token: decodedToken });
+    // if (isTokenBlacklisted) {
+    //   return res.status(401).json({ message: "token non valide" });
+    // }
 
     const user = await User.findOne({ email: decoded.email });
     if (!user) {
@@ -70,9 +70,9 @@ router.post("/reset/:token", asyncErrorHandler(async (req, res) => {
     await user.save();
 
     // Blacklist the token
-    const expiresAt = Date.now() + 3600 * 1000;
-    const blacklistedToken = new BlacklistedToken({ token: decodedToken, expiresAt: new Date(expiresAt) });
-    await blacklistedToken.save();
+    // const expiresAt = Date.now() + 3600 * 1000;
+    // const blacklistedToken = new BlacklistedToken({ token: decodedToken, expiresAt: new Date(expiresAt) });
+    // await blacklistedToken.save();
 
     return res.json({ message: "Réinitialisation du mot de passe réussie" });
   });
