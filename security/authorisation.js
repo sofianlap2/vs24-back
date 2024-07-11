@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const BlacklistedToken = require("../models/blacklistedToken");
+const BlacklistedToken = require("../models/blackListedToken");
 const jwt = require("jsonwebtoken");
 
 async function authorisation(req, res, next) {
