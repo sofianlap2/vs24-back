@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const EspacePublic = require('../models/espacePublic');
 const User = require("../models/user");
-
+const Publicite = require("../models/publicite")
 const Authorisation = require("../security/authorisation");
 const asyncErrorHandler = require('../security/asyncErrorHandler');
 // const Station = require('../models/station');
@@ -234,6 +234,83 @@ router.get('/EspacesClient', Authorisation, async (req, res) => {
     res.status(200).json(userEspaces);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch user espace" });
+  }
+});
+router.get('/EspacesPublicitaire', async (req, res) => {
+  try {
+    const espaces = await EspacePublic.find({});
+    const ads = await Publicite.find({}).select('espacePublic -_id');
+
+    // Flatten the array of espacePublic in advertisements
+    const usedEspacePublics = ads.flatMap(ad => ad.espacePublic);
+
+    res.status(200).send({ espaces, usedEspacePublics });
+  } catch (error) {
+    res.status(500).send({ error: 'Error fetching public spaces and advertisements' });
+  }
+});
+router.get('/espaceFilterForPublicite', Authorisation, asyncErrorHandler(async (req, res) => {
+ 
+    const userEmail = req.userEmail; // Assuming userEmail is available in the request object
+    const { gouvernorat, ville, typeEspace } = req.query;
+
+    // Fetch the user ID based on the email
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const userId = user._id;
+
+    let filter = {};
+
+    if (gouvernorat) {
+      filter.gouvernorat = gouvernorat;
+    }
+
+    if (ville) {
+      filter.ville = ville;
+    }
+
+    if (typeEspace) {
+      filter.typeEspace = typeEspace;
+    }
+
+    // Find all Publicites created by the current user
+    const userPublicites = await Publicite.find({ user: userId });
+
+    // Extract espacePublic IDs from these Publicites
+    const userEspaceIds = userPublicites.map(ad => ad.espacePublic).flat();
+
+    // Find EspacePublic that are not in userEspaceIds and apply filter
+    const espaces = await EspacePublic.find({
+      ...filter,
+      _id: { $nin: userEspaceIds }
+    });
+
+    res.json(espaces);
+  
+}));
+
+
+router.get('/espacePubliciteManagemenet', Authorisation, async (req, res) => {
+  try {
+    const userId = req.userId; // Assuming userId is available in the request object
+
+    // Find all Publicites created by the current user
+    const userPublicites = await Publicite.find({ user: userId });
+
+    // Extract espacePublic IDs from these Publicites
+    const userEspaceIds = userPublicites.map(ad => ad.espacePublic).flat();
+
+    // Fetch details of each Espace based on the extracted IDs
+    const userEspaces = await EspacePublic.find({ _id: { $in: userEspaceIds } });
+
+    res.json(userEspaces);
+  } catch (error) {
+    console.error('Error fetching filtered espaces:', error.message);
+    res.status(500).json({ error: 'Failed to fetch espacePublic' });
   }
 });
 

@@ -9,6 +9,7 @@ const connectDB = async () => {
         useUnifiedTopology: true,
       }
     );
+    
     console.log("Successfully connected to MongoDB");
     const db = mongoose.connection.db;
   } catch (error) {

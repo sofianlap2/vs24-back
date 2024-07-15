@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: '10mb' }));
+const publiciteRoutes = require('./routes/pupliciteRoute');
 
 const userRoutes = require('./routes/userRoutes');
 const espacePuclicRoutes= require('./routes/espacePublicRoutes');
@@ -78,7 +79,7 @@ app.use('/espacePublic', espacePuclicRoutes);
 app.use('/station', stationRoutes);
 app.use('/usersDeleted', userDeletedRoute);
 app.use('/notification', notificationRoute);
-
+app.use('/publicites', publiciteRoutes);
 // Mount routes for authentication and password reset
 app.use('', authenticationRoute);
 app.use('', resetPassword);

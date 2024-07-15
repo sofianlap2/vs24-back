@@ -7,6 +7,7 @@ const TypeEnum = {
     HOTEL: "HOTEL",
     SALLESPORT: "SALLESPORT",
     HOPITAL: "HOPITAL",
+    AUTRE: "AUTRE"
   };
 const EspacePublicSchema = new  Schema({
   nomEspace:{type:
