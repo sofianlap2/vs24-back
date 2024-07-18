@@ -8,7 +8,7 @@ const adminAccount = async () => {
     if (!existingUser) {
       const user = new User({
     fullName :"admin",
-   
+   verified:true,
     phoneNumber: "22222222",
    email: "admin@gmail.com",
         password: await bcrypt.hash("admin123", 10),
