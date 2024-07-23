@@ -3,35 +3,38 @@
   margin: 0 auto; /* Center horizontally */
   padding: 20px;
   position: relative;
-  background-color: #fff;
+  background-color: #696464;
   border-radius: 8px;
   height: 80vh; /* Set a fixed height for the container */
   overflow-y: auto; /* Enable vertical scrolling */
 }
-  
+ 
   .form-group {
     margin-bottom: 20px;
     flex: 1;
-    border:'1px solid #000' ;
   }
   .demande-pub {
     max-width: 550px;
     margin: 0 auto; /* Center horizontally */
     padding: 20px;
     position: relative;
-    background-color: #fff;
+    background-color: #ffffff;
     border-radius: 8px;
     height: 80vh; /* Set a fixed height for the container */
     overflow-y: auto; /* Enable vertical scrolling */
+    /* border: 5px solid #f50f0f;  */
+ 
   }
-  
+ 
   label {
     display: block;
     margin-bottom: 5px;
     font-Weight: 500;
 font-family: Constantia;
+white-space: none;
+ 
   }
-  
+ 
   input[type="text"],
   input[type="email"],
   input[type="tel"]
@@ -40,18 +43,18 @@ font-family: Constantia;
     height: 35px;
     padding: 2px;
     border-radius: 4px;
-    border: 1px solid #000;
+    border: 1px solid #fff;
   }
  
-  
+ 
   textarea {
     width: 100%;
     height: 70px;
     padding: 8px;
     border-radius: 4px;
-    border: 1px solid #000;
+    border: 1px solid #fff;
   }
-  
+ 
   button[type="submit"] {
     background: #000;
     color: #fff;
@@ -59,25 +62,25 @@ font-family: Constantia;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    
+   
   }
-  
+ 
   input[type="submit"]:hover {
-    background: #9e0000;
-
+    background: #397c86;
+ 
     color: #000;
-
+ 
   }
   .form-group {
     margin-bottom: 20px;
   }
-  
+ 
   .form-item {
     margin-bottom: 1rem; /* Space between items */
   }
   @media screen and (max-width: 975px) {
     .demande-pub {
-      margin-top: 10vh; /* Adjust margin-top for mobile devices */
+      margin-top: 0vh; /* Adjust margin-top for mobile devices */
     }
     .close-icon {
       display: none;
@@ -85,12 +88,12 @@ font-family: Constantia;
     .form-item {
       width: 100%; /* Ensure each item takes full width */
     }
-  
+ 
     .form-select {
       width: 100%; /* Ensure select elements are responsive */
     }
   }
-  
+ 
   .video-background {
     position: fixed;
     top: 0;
@@ -104,4 +107,24 @@ font-family: Constantia;
     position: relative;
     z-index: 2;
   }
+  .form-group-espace {
+    margin-bottom: 20px;
+    flex: 100;
+
+  }
+  .espace-public-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6 columns layout */
+    gap: 10px; /* Adjust the gap between items */
+  }
+  .espace-public-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
   
+  @media screen and (max-width: 975px) {
+    .espace-public-container {
+      grid-template-columns: repeat(3, 1fr); /* Adjust to 3 columns for smaller screens */
+    }
+  }

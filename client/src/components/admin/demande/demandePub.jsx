@@ -364,30 +364,26 @@ const DemandePub = ({ setShowDemandePubs }) => {
       </select>
   </div>
  
-        <div>
-          <tr>
-            <th>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '23px' ,marginBottom:'40px'}}>
-                Espace Publics:
-                {espacePublics.map((espacePublic) => (
-                  <div
-                    key={espacePublic._id}
-                    style={{ display: "inline-block", display:'flex'}}
-                  >
-                    <input style={{fontFamily: 'Constantia'}}
+ <div className="form-group">
+  <label>Espaces Publics Disponibles</label>
+  <div className="espace-public-container">
+    {espacePublics.map((espacePublic) => (
+      <div key={espacePublic.id} className="espace-public-item">
+       <input style={{fontFamily: 'Constantia'}}
                       type="checkbox"
                       id={espacePublic._id}
                       value={espacePublic._id}
                       checked={selectedEspacePublics.includes(espacePublic._id)}
                       onChange={() => handleCheckboxChange(espacePublic._id)}
                     />
-                    <label htmlFor={espacePublic._id}>{espacePublic.nomEspace}</label>
-                  </div>
-                ))}
-              </label>
-            </th>
-          </tr>
-        </div>
+        <label htmlFor={`espacePublic-${espacePublic.id}`}>
+          {espacePublic.nomEspace}
+        </label>
+      </div>
+    ))}
+  </div>
+</div>
+
         <div>
           <label htmlFor="messageDemande">Message :</label>
           <textarea
