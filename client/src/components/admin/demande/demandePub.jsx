@@ -187,7 +187,7 @@ const DemandePub = ({ setShowDemandePubs }) => {
        {isMobile && (
   <>
     <Icon to="/">
-      <img src="/src/images/clos.webp" height="25px" style={{marginTop:'-20px',marginBottom:'1px'}} alt="RemoteHub Logo" loading="lazy" />
+      <img src="../../images/close.png" height="25px" style={{marginTop:'-20px',marginBottom:'1px'}} alt="RemoteHub Logo" loading="lazy" />
     </Icon>
     <br/>
     <video className="video-background" autoPlay loop muted>
