@@ -1,0 +1,24 @@
+
+  
+  .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .form-group .col-md-4 {
+    width: 48%;
+    margin-bottom: 10px;
+  }
+  
+  .form-group .col-md-4 input,
+  .form-group .col-md-4 select {
+    width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .form-group .col-md-4 {
+      width: 100%;
+    }
+  }
+  

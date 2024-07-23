@@ -7,6 +7,7 @@ const User = require("../models/user");
 const Token = require("../models/token");
 const crypto = require("crypto");
 const sendEmail = require("../config/sendEmail ");
+const BlackListToken = require("../models/blackListToken");
 //const BlacklistedToken = require("../models/blacklistedToken");
 require('dotenv').config();
 const appUrlFront= process.env.CLIENT_URL;
@@ -84,6 +85,20 @@ router.post("/logout", async(req, res) => {
   }
 
   const expiresAt = Date.now() + 86400 * 1000;
+  const BlackListToken = new BlackListToken({
+    token: token,
+    expiresAt: new Date(expiresAt),
+  });
+
+  BlackListToken
+    .save()
+    .then(() => {
+      res.json({ message: "Déconnexion réussie" });
+    })
+    .catch((error) => {
+      console.error("Erreur lors de la déconnexion :", error);
+      res.status(500).json({ message: "Erreur serveur" });
+    });
   // const blacklistedToken = new BlacklistedToken({
   //   token: token,
   //   expiresAt: new Date(expiresAt),
