@@ -130,12 +130,13 @@ const Sidebarrr = () => {
         width={isCollapsed ? (isMobile ? "20px" : "80px") : "265px"} // Adjusted width for mobile and desktop
       >
         <Menu>
-          {!isMobile && (
+          { (
             <MenuItem
               onClick={toggleSidebar}
               icon={<MenuOutlinedIcon />}
               style={{
                 margin: "10px 0px 10px 0",
+                zIndex:20,
                 color: colors.primary,
               }}
             />

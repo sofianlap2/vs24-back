@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useParams } from 'react-router-dom';
 import { ResponsivePie } from '@nivo/pie';
 import { tokens } from '../../../../theme';
+import zIndex from '@mui/material/styles/zIndex';
 
 const ChartPieEspace = () => {
   const { email } = useParams();
@@ -13,6 +14,8 @@ const ChartPieEspace = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isDarkMode = theme.palette.mode === 'dark';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,14 +65,25 @@ const ChartPieEspace = () => {
       flex: 1,
       height: '100%',
       width: '100%',
-      marginTop: '10vh',
+      marginTop:isMobile ? '69vw': '10vw',
       marginLeft: '22vw',
+    },
+    chart1: {
+      flex: 1,
+      height: '100%',
+      width: '100%',
+      marginTop:isMobile ? '-21vw': '5vw',
+      marginLeft:isMobile ? '-2vw': '0vw',
     },
     sidebar: {
       position: 'absolute',
       top: 0,
       left: 0,
       zIndex: 1,
+    },
+    h3: {
+      fontSize: isMobile?'15px':'20px',
+textAlign: 'center',fontFamily: 'Constantia',fontWeight:"bold"
     }
   };
 
@@ -90,12 +104,13 @@ const ChartPieEspace = () => {
 
   return (
     <div style={styles.chart}>
-      <h3 style={{ textAlign: 'center', fontFamily: 'Constantia', fontWeight: 'bold' }}>
-        Espace Public par Gouvernorat
+      <h3 style={styles.h3}>
+      <b style={{fontFamily:'sans-serif'}}>2-</b> Espace Public par Gouvernorat
       </h3>
+      <div style={styles.chart1}>
       <ResponsivePie
         data={data}
-        margin={{ top: 50, right: 50, bottom: 50, left: 50 }}
+        margin={{ top: 10, right: 50, bottom: 50, left: 50 }}
         innerRadius={0.5}
         padAngle={0.7}
         cornerRadius={3}
@@ -111,7 +126,9 @@ const ChartPieEspace = () => {
         motionStiffness={90}
         motionDamping={15}
       />
+      </div>
     </div>
+    
   );
 };
 

@@ -227,8 +227,52 @@ router.post('/demandePub', asyncErrorHandler(async (req, res) => {
         status: 'SUCCESS',
         message: 'La demande a été créée avec succès',
         data: result
-    });}));
+    });
 
+}));
 
+router.get('/getDemandStatistics/:year', async (req, res) => {
+    const year = parseInt(req.params.year, 10);
+  
+    try {
+      const startDate = new Date(`${year}-01-01`);
+      const endDate = new Date(`${year}-12-31`);
+  
+      const statistics = await Demande.aggregate([
+        {
+          $match: {
+            dateDemande: { $gte: startDate, $lte: endDate },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              month: { $month: '$dateDemande' },
+              typeDemande: '$typeDemande',
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            month: '$_id.month',
+            typeDemande: '$_id.typeDemande',
+            count: 1,
+            _id: 0,
+          },
+        },
+        {
+          $sort: {
+            month: 1,
+          },
+        },
+      ]);
+  
+      res.json(statistics);
+    } catch (error) {
+      console.error('Error fetching demand statistics:', error);
+      res.status(500).send('Server error');
+    }
+  });
 
 module.exports = router;

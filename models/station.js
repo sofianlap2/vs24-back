@@ -28,7 +28,6 @@ const StationSchema = new  Schema({
   status:{ 
     type: String,
     enum: Object.values(StatusEnum),
-    
   },  
 });
 const  Station= mongoose.model('Station', StationSchema);

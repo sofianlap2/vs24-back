@@ -6,6 +6,7 @@ const User = require("../models/user");
 const Publicite = require("../models/publicite")
 const Authorisation = require("../security/authorisation");
 const asyncErrorHandler = require('../security/asyncErrorHandler');
+const Station = require('../models/station');
 // const Station = require('../models/station');
 
 router.post('/:email/addEspacePublic', asyncErrorHandler( async (req, res) => {
@@ -197,6 +198,180 @@ router.delete("/:_id", (req, res) => {
           res.sendStatus(500); // Internal server error
       });
 });
+///////////////////////////////////////////////////////////////////////////////////////
+router.get('/statistics1/:gouvernorat', async (req, res) => {
+  const gouvernorat = req.params.gouvernorat;
+  
+  if (!gouvernorat) {
+    return res.status(400).send("Gouvernorat manquant.");
+  }
+
+  try {
+    console.log("Gouvernorat reçu :", gouvernorat);
+    const stats = await getStatisticsByGouvernoratAndType1(gouvernorat);
+    console.log("Statistiques obtenues :", stats);
+    res.json(stats);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des statistiques :", error);
+    res.status(500).json({ error: "Erreur lors de la récupération des statistiques." });
+  }
+});
+
+const getStatisticsByGouvernoratAndType1 = async(gouvernorat)=>{
+
+  try{
+      const stats =EspacePublic.aggregate([
+        {
+          $match:{gouvernorat}
+        },
+        {
+          $group:{
+            _id:{typeEspace :'$typeEspace'},
+            count:{$sum :1}
+          }
+        },
+        {
+          $project:{
+            _id:0,
+            typeEspace:'$_id.typeEspace',
+            count:1
+          }
+        },
+        {
+          $sort:{typeEspace : 1}
+
+        }
+        
+      ]);
+      console.log('statistics avant retour ',stats);
+      return stats;
+
+  }
+  catch(error){
+    console.error("erreur lors de l' aggregation de statistics ");
+    throw error;
+  }
+};
+////////////////////////////////////////////////////////////////////
+router.get('/statistics', async (req, res) => {
+  try {
+    const stats = await getStatisticsByGouvernoratAndType();
+    res.json(stats);
+  } catch (error) {
+    res.status(500).send("Erreur lors de la récupération des statistiques.");
+  }
+});
+
+const getStatisticsByGouvernoratAndType = async () => {
+  try {
+    const statistics = await EspacePublic.aggregate([
+      {
+        $group: {
+          _id: { gouvernorat: "$gouvernorat", typeEspace: "$typeEspace" },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          gouvernorat: "$_id.gouvernorat",
+          typeEspace: "$_id.typeEspace",
+          count: 1
+        }
+      },
+      {
+        $sort: { gouvernorat: 1, typeEspace: 1 }
+      }
+    ]);
+
+    return statistics;
+  } catch (error) {
+    console.error("Erreur lors de l'agrégation des statistiques :", error);
+    throw error;
+  }
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+const getStatisticsStationByGouvernoratAndType = async (gouvernorat) => {
+  try {
+    const statistics = await Station.aggregate([
+      {
+        $lookup: {
+          from: 'espacepublics', // Nom de la collection EspacePublic
+          localField: 'espacePublic',
+          foreignField: '_id',
+          as: 'espacePublicDetails'
+        }
+      },
+      {
+        $unwind: '$espacePublicDetails'
+      },
+      {
+        $match: { 'espacePublicDetails.gouvernorat': gouvernorat }
+      },
+      {
+        $group: {
+          _id: {
+            gouvernorat: '$espacePublicDetails.gouvernorat',
+            typeEspace: '$espacePublicDetails.typeEspace'
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          gouvernorat: '$_id.gouvernorat',
+          typeEspace: '$_id.typeEspace',
+          count: 1
+        }
+      },
+      {
+        $sort: { gouvernorat: 1, typeEspace: 1 }
+      }
+    ]);
+
+    return statistics;
+  } catch (error) {
+    console.error("Erreur lors de l'agrégation des statistiques :", error);
+    throw error;
+  }
+};
+
+router.get('/getStatisticsStationByGouvernoratAndType/:gouvernorat', async (req, res) => {
+  const { gouvernorat } = req.params;
+  try {
+    const stats = await getStatisticsStationByGouvernoratAndType(gouvernorat);
+    res.json(stats);
+  } catch (error) {
+    res.status(500).send("Erreur lors de la récupération des statistiques.");
+  }
+});
+
+//////////////////////////////////////////////////////////////////////////
+router.get('/getTotalCounts', async (req, res) => {
+  try {
+    const totalCounts = await getTotalCounts();
+    res.status(200).json(totalCounts);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des totaux', error });
+  }
+});
+
+const getTotalCounts = async () => {
+  try {
+    const totalEspacesPublics = await EspacePublic.countDocuments();
+    const totalStations = await Station.countDocuments();
+
+    return { totalEspacesPublics, totalStations };
+  } catch (error) {
+    console.error("Erreur lors de la récupération des totaux :", error);
+    throw error;
+  }
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 router.get("/getEspacePublic/:id", async (req, res) => {
   try {
     const espacePublic = await EspacePublic.findById(req.params.id);
