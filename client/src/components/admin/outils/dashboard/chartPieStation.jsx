@@ -49,7 +49,7 @@ const ChartPieStation = () => {
         },
         labels: {
           text: {
-            fill: '#777777',
+            fill: '#ffffff', // Change this to a color that contrasts better with the background
           },
         },
       });
@@ -77,7 +77,7 @@ const ChartPieStation = () => {
           flex: 1,
           height: '100%',
           width:'100%',
-          marginTop:  isMobile ?'60vw':'25vw',
+          marginTop:  isMobile ?'70vw':'25vw',
           marginLeft: '22vw',
           sliceLabelsTextColor:'#fff',
         },
@@ -93,7 +93,7 @@ const ChartPieStation = () => {
         }
         ,
         h3: {
-          fontSize: isMobile?'15px':'20px',
+          fontSize: isMobile?'17px':'20px',
     textAlign: 'center',fontFamily: 'Constantia',fontWeight:"bold"
         }
       };
@@ -102,7 +102,7 @@ const ChartPieStation = () => {
     <h3   style={styles.h3}>  Stations par Gouvernorat</h3>
     <ResponsivePie
       data={data1}
-      margin={{ top: 50, right: 50, bottom: 50, left: 50 }}
+      margin={{ top: 1, right: 50, bottom: 50, left: 50 }}
       innerRadius={0.5}
       padAngle={0.7}
       cornerRadius={3}

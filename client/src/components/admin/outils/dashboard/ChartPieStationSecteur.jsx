@@ -4,6 +4,9 @@ import Cookies from 'js-cookie';
 import { Bar } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { useMediaQuery, useTheme } from '@mui/material';
+import zIndex from '@mui/material/styles/zIndex';
+import Select from 'react-select';
+
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -68,18 +71,25 @@ const ChartPieStationSecteur = () => {
       padding: '20px',
     },
     chartContainer: {
-      flex: 1,
-      height: '100%',
-      width: '120%',
-      marginTop: isMobile ?'-1vw':'5vw',
-      marginLeft: isMobile ?'1vw':'-1vw',
+      flex: '1 1 50%',
+      height: '300px',
+      maxWidth: '130%',
+      margin: '10px',
+      marginTop: '8vh',
     },
     chart: {
       flex: 1,
       height: '100%',
       width: '100%',
-      marginTop: isMobile ?'80vw':'25vw',
-      marginLeft: isMobile ?'20vw':'23vw',
+      marginTop: isMobile ?'60vw':'28vw',
+      marginLeft: isMobile ?'5vw':'20vw',
+    },
+    chart1: {
+      flex: 1,
+      height: '100%',
+      width: '100%',
+      marginTop: isMobile ?'-1vw':'2vw',
+      marginLeft: isMobile ?'12vw':'2vw',
     },
     sidebar: {
       position: 'absolute',
@@ -87,23 +97,24 @@ const ChartPieStationSecteur = () => {
       left: 0,
       zIndex: 1,
     },
+    select:{
+        zIndex: 20,
+        marginLeft: isMobile ?'35vw':'16vw',
+        marginBottom:'-60px',
+        width:isMobile? '100px':'150px',
+        padding: '1px', fontSize: '16px', borderRadius: '5px', border: '1px solid #ccc'
+    },
     h3:{
-      textAlign: 'center',
-       fontFamily: 'Constantia', 
-       fontSize: isMobile?'15px':'20px',
-       fontWeight: 'bold',
-       marginLeft: isMobile ?'6vw':'-2vw',
-    }
-  ,
-  select:{
-    zIndex: 20,marginLeft:isMobile? '40px':'15vw' ,
-    width:isMobile? '70px':'150px',
-    padding: '10x', 
-    fontSize: '16px', 
-    borderRadius: '5px', 
-    border: '1px solid #ccc'
-  }
+      textAlign: 'center', 
+      fontFamily: 'Constantia',
+       fontSize: isMobile?'17px':'20px',
+        fontWeight: 'bold' ,
+      marginLeft: isMobile ?'25vw':'2vw',
+      marginTop:isMobile ? '20vw': '-2vw'
+
+  },
   };
+  
   const getTheme = () => ({
     axis: {
       ticks: {
@@ -118,42 +129,62 @@ const ChartPieStationSecteur = () => {
       },
     },
   });
+  const gouvernoratOptions = [
+    { value: 'Ariana', label: 'Ariana' },
+    { value: 'Béja', label: 'Béja' },
+    { value: 'BenArous', label: 'Ben Arous' },
+    { value: 'Bizerte', label: 'Bizerte' },
+    { value: 'Gabès', label: 'Gabès' },
+    { value: 'Gafsa', label: 'Gafsa' },
+    { value: 'Jendouba', label: 'Jendouba' },
+    { value: 'Kairouan', label: 'Kairouan' },
+    { value: 'Kasserine', label: 'Kasserine' },
+    { value: 'Kébili', label: 'Kébili' },
+    { value: 'LeKef', label: 'Le Kef' },
+    { value: 'Mahdia', label: 'Mahdia' },
+    { value: 'LaManouba', label: 'La Manouba' },
+    { value: 'Médenine', label: 'Médenine' },
+    { value: 'Monastir', label: 'Monastir' },
+    { value: 'Nabeul', label: 'Nabeul' },
+    { value: 'Sfax', label: 'Sfax' },
+    { value: 'SidiBouzid', label: 'Sidi Bouzid' },
+    { value: 'Siliana', label: 'Siliana' },
+    { value: 'Sousse', label: 'Sousse' },
+    { value: 'Tataouine', label: 'Tataouine' },
+    { value: 'Tozeur', label: 'Tozeur' },
+    { value: 'Tunis', label: 'Tunis' },
+    { value: 'Zaghouan', label: 'Zaghouan' },
+  ];
 
   return (
     
     <div style={styles.chart}>
       <h3 style={styles.h3}>Statistiques de station par type de secteur</h3>
-      <select
-        style={styles.select}
-        value={selectedGouvernorat}
-        onChange={(e) => setSelectedGouvernorat(e.target.value)}
-      >
-        <option value="">Sélectionner un gouvernorat</option>
-        <option value="Ariana">Ariana</option>
-        <option value="Béja">Béja</option>
-        <option value="BenArous">Ben Arous</option>
-        <option value="Bizerte">Bizerte</option>
-        <option value="Gabès">Gabès</option>
-        <option value="Gafsa">Gafsa</option>
-        <option value="Jendouba">Jendouba</option>
-        <option value="Kairouan">Kairouan</option>
-        <option value="Kasserine">Kasserine</option>
-        <option value="Kébili">Kébili</option>
-        <option value="LeKef">Le Kef</option>
-        <option value="Mahdia">Mahdia</option>
-        <option value="LaManouba">La Manouba</option>
-        <option value="Médenine">Médenine</option>
-        <option value="Monastir">Monastir</option>
-        <option value="Nabeul">Nabeul</option>
-        <option value="Sfax">Sfax</option>
-        <option value="SidiBouzid">Sidi Bouzid</option>
-        <option value="Siliana">Siliana</option>
-        <option value="Sousse">Sousse</option>
-        <option value="Tataouine">Tataouine</option>
-        <option value="Tozeur">Tozeur</option>
-        <option value="Tunis">Tunis</option>
-        <option value="Zaghouan">Zaghouan</option>
-      </select>
+      <Select
+        options={gouvernoratOptions}
+        value={gouvernoratOptions.find(option => option.value === selectedGouvernorat)}
+        onChange={option => setSelectedGouvernorat(option ? option.value : null)}
+        styles={{
+          control: base => ({
+            ...base,
+            fontFamily: 'Constantia',
+            color: 'hsl(0, 0%, 40%)',
+            marginLeft: isMobile ?'22vw':'12vw',
+            width: isMobile ?'200px':'250px'
+
+
+          }),
+          menu: base => ({
+            ...base,
+            fontFamily: 'Constantia',
+            color: 'hsl(0, 0%, 40%)',
+            marginLeft: isMobile ?'22vw':'12vw',
+            width: isMobile ?'200px':'250px'
+
+            
+          }),
+        }}
+      />
       <div style={styles.chartContainer}>
         <Bar
           data={chartData}
@@ -173,7 +204,7 @@ const ChartPieStationSecteur = () => {
                 display: true,
                 text: '',
                 font: {
-                  size: 14,
+                  size: 15,
                 },
               },
             },
@@ -183,7 +214,7 @@ const ChartPieStationSecteur = () => {
                   autoSkip: true,
                   maxRotation: 0,
                   font: {
-                    size: 10,
+                    size: 12,
                   },
                 },
               },
@@ -197,7 +228,7 @@ const ChartPieStationSecteur = () => {
               },
             },
           }}
-          style={{ height: '50vh', width: '100%' }}
+          style={{ height: '50vh', width: '138%' }}
         />
       </div>
     </div>

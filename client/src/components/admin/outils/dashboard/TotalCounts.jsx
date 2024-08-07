@@ -55,20 +55,21 @@ const TotalCounts = () => {
     chartContainer: {
       flex: '1 1 50%',
       height: '300px',
-      maxWidth: '400px',
+      maxWidth: '100%',
       margin: '10px',
       marginTop: '10vh',
     },
     chart: {
-      marginLeft:isMobile ? '70px': '550px',
-      marginTop:isMobile?'80px':'40px',
+      marginLeft:isMobile ? '45vw': '40vw',
+      marginTop:isMobile?'15vw':'40px',
+      
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       gap: '20px', // Space between elements
       textAlign: 'center',
-      fontSize: isMobile?'10px':'20px',
+      fontSize: isMobile?'20px':'20px',
     },
     sidebar: {
       position: 'absolute',
@@ -78,7 +79,6 @@ const TotalCounts = () => {
     },
     statItem: {
       flex: '1',
-      margin:isMobile? '0px 0px -12px 40px': '10px -112px 10px 0px',
       border: '2px solid #ccc', // Add border
     borderRadius: '8px', // Optional: Add border radius for rounded corners
     padding: '10px', // Optional: Add padding for better spacing inside the item
@@ -91,7 +91,7 @@ const TotalCounts = () => {
   },
   h4:{
  fontFamily: 'Constantia', fontWeight: 'bold',
- fontSize: isMobile?'10px':'20px',
+ fontSize: isMobile?'20px':'20px',
 
   }
   };

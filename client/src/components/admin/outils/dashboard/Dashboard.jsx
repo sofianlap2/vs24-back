@@ -51,8 +51,8 @@ const Dashboard = () => {
 
     chart: {
       height: "300px",
-      maxWidth: isMobile ? "55vw" : "40vw",
-      marginLeft: isMobile ? "20px" : "10vw",
+      maxWidth: isMobile ? "70vw" : "40vw",
+      marginLeft: isMobile ? "-10vw" : "10vw",
       zIndex:20,
       
     },
@@ -70,7 +70,7 @@ const Dashboard = () => {
       {shouldShowHeader && <Header />}
     
       <div >
-      <div className="row" style={{ position: "absolute",top: 0,right: 1,zIndex: 10}}>{shouldShowHeader && <Sidebarrr />}</div>
+      <div className="row" style={{ position: "absolute",top: 0,right: 1,zIndex: 40}}>{shouldShowHeader && <Sidebarrr />}</div>
         <div style={styles.content} className="row">
           <div style={styles.chartContainer}>
            <div style={styles.chart}>

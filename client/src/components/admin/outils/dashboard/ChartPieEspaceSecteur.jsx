@@ -5,6 +5,8 @@ import Cookies from 'js-cookie';
 import { useParams } from 'react-router-dom';
 import { ResponsivePie } from '@nivo/pie';
 import { tokens } from '../../../../theme';
+import Select from 'react-select';
+
 
 const ChartPieEspaceSecteur = () => {
   const [data, setData] = useState([]);
@@ -71,7 +73,7 @@ const ChartPieEspaceSecteur = () => {
       flex: 1,
       height: '100%',
       width: '100%',
-      marginTop: isMobile ?'50vw':'15vw',
+      marginTop: isMobile ?'50vw':'20vw',
       marginLeft: isMobile ?'12vw':'20vw',
     },
     chart1: {
@@ -89,16 +91,20 @@ const ChartPieEspaceSecteur = () => {
     },
     select:{
         zIndex: 20,
-        marginLeft: isMobile ?'25vw':'16vw',
+        marginLeft: isMobile ?'30vw':'16vw',
         marginBottom:'-50px',
-        width:isMobile? '70px':'150px',
+        width:isMobile? '100px':'150px',
         padding: '1px', fontSize: '16px', borderRadius: '5px', border: '1px solid #ccc'
     },
-    h3: {
-      fontSize: isMobile?'15px':'20px',
-      textAlign: 'center', fontFamily: 'Constantia', fontWeight: 'bold',display:'flex',marginLeft: isMobile?'60px':'120px',
-      alignItems:'center'
-    }
+    h3:{
+      textAlign: 'center', 
+      fontFamily: 'Constantia',
+       fontSize: isMobile?'17px':'20px',
+        fontWeight: 'bold' ,
+      marginLeft: isMobile ?'22vw':'2vw',
+      marginTop:isMobile ? '20vw': '-2vw'
+
+  },
   };
   
   const getTheme = () => ({
@@ -111,46 +117,69 @@ const ChartPieEspaceSecteur = () => {
     },
     labels: {
       text: {
-        fill: '#777777',
+        fill: '#ffffff', // Change this to a color that contrasts better with the background
       },
     },
   });
+
+  const gouvernoratOptions = [
+    { value: 'Ariana', label: 'Ariana' },
+    { value: 'Béja', label: 'Béja' },
+    { value: 'BenArous', label: 'Ben Arous' },
+    { value: 'Bizerte', label: 'Bizerte' },
+    { value: 'Gabès', label: 'Gabès' },
+    { value: 'Gafsa', label: 'Gafsa' },
+    { value: 'Jendouba', label: 'Jendouba' },
+    { value: 'Kairouan', label: 'Kairouan' },
+    { value: 'Kasserine', label: 'Kasserine' },
+    { value: 'Kébili', label: 'Kébili' },
+    { value: 'LeKef', label: 'Le Kef' },
+    { value: 'Mahdia', label: 'Mahdia' },
+    { value: 'LaManouba', label: 'La Manouba' },
+    { value: 'Médenine', label: 'Médenine' },
+    { value: 'Monastir', label: 'Monastir' },
+    { value: 'Nabeul', label: 'Nabeul' },
+    { value: 'Sfax', label: 'Sfax' },
+    { value: 'SidiBouzid', label: 'Sidi Bouzid' },
+    { value: 'Siliana', label: 'Siliana' },
+    { value: 'Sousse', label: 'Sousse' },
+    { value: 'Tataouine', label: 'Tataouine' },
+    { value: 'Tozeur', label: 'Tozeur' },
+    { value: 'Tunis', label: 'Tunis' },
+    { value: 'Zaghouan', label: 'Zaghouan' },
+  ];
+
 
   return (
     <div style={styles.chart}>
          <h3 style={styles.h3}>Statistiques d'espace public par type de secteur </h3>
 
-      <select
-        style={styles.select}
-        value={selectedGouvernorat}
-        onChange={(e) => setSelectedGouvernorat(e.target.value)}
-      >
-        <option value="">Sélectionner un gouvernorat</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Ariana">Ariana</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Béja">Béja</option>
-        <option style={{ fontFamily: 'Constantia' }} value="BenArous">BenArous</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Bizerte">Bizerte</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Gabès">Gabès</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Gafsa">Gafsa</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Jendouba">Jendouba</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Kairouan">Kairouan</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Kasserine">Kasserine</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Kébili">Kébili</option>
-        <option style={{ fontFamily: 'Constantia' }} value="LeKef">Le Kef</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Mahdia">Mahdia</option>
-        <option style={{ fontFamily: 'Constantia' }} value="LaManouba">LA Manouba</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Médenine">Médenine</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Monastir">Monastir</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Nabeul">Nabeul</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Sfax">Sfax</option>
-        <option style={{ fontFamily: 'Constantia' }} value="SidiBouzid">Sidi Bouzid</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Siliana">Siliana</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Sousse">Sousse</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Tataouine">Tataouine</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Tozeur">Tozeur</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Tunis">Tunis</option>
-        <option style={{ fontFamily: 'Constantia' }} value="Zaghouan">Zaghouan</option>
-      </select>
+         <Select
+        options={gouvernoratOptions}
+        value={gouvernoratOptions.find(option => option.value === selectedGouvernorat)}
+        onChange={option => setSelectedGouvernorat(option ? option.value : null)}
+        styles={{
+          control: base => ({
+            ...base,
+            fontFamily: 'Constantia',
+            color: 'hsl(0, 0%, 40%)',
+            marginLeft: isMobile ?'22vw':'12vw',
+            width: isMobile ?'200px':'250px'
+
+
+
+          }),
+          menu: base => ({
+            ...base,
+            fontFamily: 'Constantia',
+            color: 'hsl(0, 0%, 40%)',
+            marginLeft: isMobile ?'22vw':'12vw',
+            width: isMobile ?'200px':'250px'
+
+
+          }),
+        }}
+      />
       {data.length > 0 ? (
           <div style={styles.chart1}>
             <ResponsivePie
@@ -163,10 +192,10 @@ const ChartPieEspaceSecteur = () => {
               theme={getTheme()}
               borderWidth={1}
               radialLabelsSkipAngle={10}
-              radialLabelsTextColor={theme.palette.mode}
+              radialLabelsTextColor="#ffffff" // Change this to a color that contrasts better with the background
               radialLabelsLinkColor={{ from: 'color' }}
               sliceLabelsSkipAngle={10}
-              sliceLabelsTextColor={theme.palette.mode}
+              sliceLabelsTextColor="#000000" // Change this to a color that contrasts better with the background
               animate={true}
               motionStiffness={90}
               motionDamping={45}

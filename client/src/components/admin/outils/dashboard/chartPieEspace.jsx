@@ -65,15 +65,17 @@ const ChartPieEspace = () => {
       flex: 1,
       height: '100%',
       width: '100%',
-      marginTop:isMobile ? '69vw': '10vw',
+      marginTop:isMobile ? '50vw': '15vw',
       marginLeft: '22vw',
     },
     chart1: {
       flex: 1,
       height: '100%',
       width: '100%',
-      marginTop:isMobile ? '-21vw': '5vw',
-      marginLeft:isMobile ? '-2vw': '0vw',
+      maxWidth:'150%',
+      marginTop:isMobile ? '0vw': '5vw',
+      marginLeft:isMobile ? '0vw': '0vw',
+      zIndex:300
     },
     sidebar: {
       position: 'absolute',
@@ -81,10 +83,15 @@ const ChartPieEspace = () => {
       left: 0,
       zIndex: 1,
     },
-    h3: {
-      fontSize: isMobile?'15px':'20px',
-textAlign: 'center',fontFamily: 'Constantia',fontWeight:"bold"
-    }
+    h3:{
+      textAlign: 'center', 
+      fontFamily: 'Constantia',
+       fontSize: isMobile?'17px':'20px',
+        fontWeight: 'bold' ,
+      marginLeft: isMobile ?'2vw':'2vw',
+      marginTop:isMobile ? '20vw': '-2vw'
+
+  },
   };
 
   const getTheme = () => ({
@@ -97,7 +104,9 @@ textAlign: 'center',fontFamily: 'Constantia',fontWeight:"bold"
     },
     labels: {
       text: {
-        fill: '#777777',
+        fill: '#ffffff', // Change this to a color that contrasts better with the background
+        fontSize: isMobile ? '12px' : '16px', // Adjust the font size based on the screen size
+
       },
     },
   });
@@ -118,10 +127,10 @@ textAlign: 'center',fontFamily: 'Constantia',fontWeight:"bold"
         theme={getTheme()}
         borderWidth={1}
         radialLabelsSkipAngle={10}
-        radialLabelsTextColor={theme.palette.mode}
+        radialLabelsTextColor="#ffffff" // Change this to a color that contrasts better with the background
         radialLabelsLinkColor={{ from: 'color' }}
         sliceLabelsSkipAngle={10}
-        sliceLabelsTextColor={theme.palette.mode}
+        sliceLabelsTextColor="#000000"
         animate={true}
         motionStiffness={90}
         motionDamping={15}

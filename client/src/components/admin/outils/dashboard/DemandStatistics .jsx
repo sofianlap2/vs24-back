@@ -3,6 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useMediaQuery, useTheme } from '@mui/material';
+import Select from 'react-select';
 
 const DemandStatistics = () => {
   const [statistics, setStatistics] = useState([]);
@@ -32,6 +33,7 @@ const DemandStatistics = () => {
     fetchStatistics();
   }, [selectedYear]);
 
+
   const formatStatistics = (data) => {
     const formattedData = Array.from({ length: 12 }, (_, i) => ({
       month: i + 1,
@@ -45,6 +47,11 @@ const DemandStatistics = () => {
 
     return formattedData;
   };
+
+  const yearOptions = Array.from({ length: 10 }, (_, i) => {
+    const year = new Date().getFullYear() - i;
+    return { value: year, label: year };
+  });
 
   const styles = {
     main: {
@@ -71,9 +78,9 @@ const DemandStatistics = () => {
     chart: {
       flex: 1,
       height: '100%',
-      width: '100%',
+      width: '140%',
       marginTop:  isMobile ?'-12vw':'4vw',
-      marginLeft: isMobile ?'22vw':'20vw',
+      marginLeft: isMobile ?'6vw':'8vw',
       
     },
 
@@ -86,23 +93,52 @@ const DemandStatistics = () => {
     h3:{
         textAlign: 'center', 
         fontFamily: 'Constantia',
-         fontSize: isMobile?'15px':'20px',
+         fontSize: isMobile?'17px':'20px',
           fontWeight: 'bold' ,
-        marginLeft: isMobile ?'2vw':'2vw',
+        marginLeft: isMobile ?'2vw':'12vw',
         marginTop:isMobile ? '20vw': '-2vw'
 
     },
-    select:{
-        padding: '1px',
-         fontSize: '16px',
-          borderRadius: '5px',
-           border: '1px solid #ccc',
-            width: '80px', 
-            marginLeft: isMobile ?'10vw':'17vw',
-            marginBottom:'5vh', 
-            textAlign: 'center' ,
+    select: {
+      container: (provided) => ({
+        ...provided,
+        zIndex: 1000,
+        fontFamily: 'Constantia',
+        width: isMobile ? '100%' : '50%',
+        marginBottom: '5vh',
+     
 
-    }
+
+      }),
+      control: (provided) => ({
+        ...provided,
+        backgroundColor: theme.palette.mode === 'dark' ? '#333' : '#fff',
+        color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+        marginLeft: isMobile ?'40vw':'27vw',
+        width: isMobile ?'100px':'150px'
+
+      
+
+      }),
+      menu: (provided) => ({
+        ...provided,
+        zIndex: 1000,
+        marginLeft: isMobile ?' 40vw':'27vw',
+        width: isMobile ?'100px':'150px'
+
+      }),
+      option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? (theme.palette.mode === 'dark' ? '#666' : '#ddd') : (state.isFocused ? (theme.palette.mode === 'dark' ? '#555' : '#eee') : undefined),
+        color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+        
+      }),
+      singleValue: (provided) => ({
+        ...provided,
+        color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+      }),
+    },
+    
   };
   
 
@@ -111,20 +147,12 @@ const DemandStatistics = () => {
       <h3 style={styles.h3}>
         Statistiques de demandes par année
       </h3>
-      <select
-        value={selectedYear}
-        onChange={(e) => setSelectedYear(e.target.value)}
-        style={styles.select}
-      >
-        {[...Array(10)].map((_, i) => {
-          const year = new Date().getFullYear() - i;
-          return (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          );
-        })}
-      </select>
+      <Select
+        options={yearOptions}
+        value={yearOptions.find(option => option.value === selectedYear)}
+        onChange={option => setSelectedYear(option.value)}
+        styles={styles.select}
+      />
       <ResponsiveContainer style={styles.dashboardContainer}>
         <LineChart data={formatStatistics(statistics)}>
           <CartesianGrid strokeDasharray="3 3" />

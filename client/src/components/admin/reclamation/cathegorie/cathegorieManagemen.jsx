@@ -160,7 +160,7 @@ const CathegorieManagement = () => {
               )}
                {shouldShowAddAdmin(role,verified) && (
                 <button
-                style={{ height: "40px", width: "20vh", justifyItems: 'center', marginTop: '2vh' }}
+                style={{ width: "20vh", justifyItems: 'center', marginTop: '2vh' }}
                 onClick={handleButtonClick}
                 className="btn btn-success"
               >
