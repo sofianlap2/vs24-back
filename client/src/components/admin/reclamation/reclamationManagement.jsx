@@ -143,6 +143,15 @@ const ReclamationsManagement = () => {
                 "& .MuiCheckbox-root": { color: `${colors.greenAccent[200]} !important` },
               }}
             >
+                 {shouldShowAddAdmin(role, verified) && (
+                <button
+                  style={{ height: "40px", width: "20vh", justifyItems: 'center', marginTop: '2vh' ,fontFamily: 'Constantia',fontWeight:"bold"}}
+                  onClick={handleButtonClick}
+                  className="btn btn-success"
+                >
+                  Catégorie
+                </button>
+              )}
               {!isMobile ? (
                 <DataGrid
                   rows={reclamations}
@@ -153,7 +162,7 @@ const ReclamationsManagement = () => {
                 <Box>
                   {reclamations.map((r) => (
                     <Box key={r.id} p={2} mb={2} bgcolor={"transparent"} borderRadius="8px" boxShadow={20}>
-                      <Typography style={{fontFamily: 'Constantia'}} variant="h6">User: {r.user}</Typography>
+                      <Typography style={{fontFamily: 'Constantia', wordBreak: 'break-word' }} variant="h6">User: {r.user}</Typography>
                       <Typography style={{fontFamily: 'Constantia'}}>Date Reclamation: {renderDateRec({ value: r.dateRec })}</Typography>
                       <Typography style={{fontFamily: 'Constantia'}}>Cathegorie: {r.cathegorieName}</Typography>
                       <Typography style={{fontFamily: 'Constantia'}}>Description: {r.description}</Typography>
@@ -161,15 +170,7 @@ const ReclamationsManagement = () => {
                   ))}
                 </Box>
               )}
-              {shouldShowAddAdmin(role, verified) && (
-                <button
-                  style={{ height: "40px", width: "20vh", justifyItems: 'center', marginTop: '2vh' ,fontFamily: 'Constantia',fontWeight:"bold"}}
-                  onClick={handleButtonClick}
-                  className="btn btn-success"
-                >
-                  Catégorie
-                </button>
-              )}
+           
           
             </Box>
           </div>

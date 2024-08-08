@@ -14,6 +14,7 @@ const ChartPieStation = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if it's a mobile device
 
     useEffect(() => {
         const fetchData1 = async () => {
@@ -48,7 +49,7 @@ const ChartPieStation = () => {
         },
         labels: {
           text: {
-            fill: '#777777',
+            fill: '#ffffff', // Change this to a color that contrasts better with the background
           },
         },
       });
@@ -76,7 +77,7 @@ const ChartPieStation = () => {
           flex: 1,
           height: '100%',
           width:'100%',
-          marginTop: '10vh',
+          marginTop:  isMobile ?'70vw':'25vw',
           marginLeft: '22vw',
           sliceLabelsTextColor:'#fff',
         },
@@ -90,13 +91,18 @@ const ChartPieStation = () => {
           left: 0,
           zIndex: 1,
         }
+        ,
+        h3: {
+          fontSize: isMobile?'17px':'20px',
+    textAlign: 'center',fontFamily: 'Constantia',fontWeight:"bold"
+        }
       };
   return (
     <div style={styles.chart}>
-    <h3   style={{textAlign: 'center',fontFamily: 'Constantia',fontWeight:"bold"}}    >Stations par Gouvernorat</h3>
+    <h3   style={styles.h3}>  Stations par Gouvernorat</h3>
     <ResponsivePie
       data={data1}
-      margin={{ top: 50, right: 50, bottom: 50, left: 50 }}
+      margin={{ top: 1, right: 50, bottom: 50, left: 50 }}
       innerRadius={0.5}
       padAngle={0.7}
       cornerRadius={3}

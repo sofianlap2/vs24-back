@@ -85,7 +85,7 @@ function ConsulterUser() {
    <div style={{ display: 'flex'}}>
       {shouldShowHeader && <Sidebarrr />} 
       <div  style={{ justifyContent: 'center' }}>
-      <div style={{  marginLeft:"40vw",marginTop:"15vh"  }}>
+      <div style={{  marginLeft:"25vw",marginTop:"15vh"  }}>
             <h3 style={{fontFamily: 'Constantia',fontWeight:"bold"}}>User information:</h3>
             <br />
             <p style={{fontFamily: 'Constantia'}}>

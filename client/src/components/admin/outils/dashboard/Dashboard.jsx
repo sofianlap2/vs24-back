@@ -11,6 +11,12 @@ import ChartBarEspace from "./chartBarEspace";
 import ChartPieEspace from "./chartPieEspace";
 import ChartPieStation from "./chartPieStation";
 import ChartGeoEspace from "./chartGeoEspace";
+import ChartPieEspaceSecteur from "./ChartPieEspaceSecteur";
+import { Margin } from "@mui/icons-material";
+import TotalCounts from "./TotalCounts";
+import ChartPieStationSecteur from "./ChartPieStationSecteur";
+import zIndex from "@mui/material/styles/zIndex";
+import DemandStatistics from "./DemandStatistics ";
 
 const Dashboard = () => {
   const { email } = useParams();
@@ -42,10 +48,13 @@ const Dashboard = () => {
 
       marginLeft: "0px",
     },
+
     chart: {
-      flex: 1,
       height: "300px",
-      maxWidth: isDesktop ? "250px" : "70vw",
+      maxWidth: isMobile ? "70vw" : "40vw",
+      marginLeft: isMobile ? "-10vw" : "10vw",
+      zIndex:20,
+      
     },
     header: {
       textAlign: "center",
@@ -59,20 +68,35 @@ const Dashboard = () => {
   return (
     <main>
       {shouldShowHeader && <Header />}
+    
       <div >
-      <div className="row" style={{ position: "absolute",top: 0,right: 1,zIndex: 1,}}>{shouldShowHeader && <Sidebarrr />}</div>
+      <div className="row" style={{ position: "absolute",top: 0,right: 1,zIndex: 40}}>{shouldShowHeader && <Sidebarrr />}</div>
         <div style={styles.content} className="row">
           <div style={styles.chartContainer}>
-           
+           <div style={styles.chart}>
+              <TotalCounts/>
+            </div>
             <div style={styles.chart}>
+
+        <DemandStatistics/>
+        </div>
+       
+           <div style={styles.chart}>
               <ChartPieEspace />
             </div>
+            <div style={styles.chart}>
+              <ChartPieEspaceSecteur/>
+            </div>
+           
             <div style={styles.chart}>
               <ChartPieStation />
             </div>
             <div style={styles.chart}>
-              <ChartGeoEspace />
+              <ChartPieStationSecteur />
             </div>
+            <div style={styles.chart}>
+              <ChartGeoEspace />
+            </div> 
           </div>
         </div>
       </div>
