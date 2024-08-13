@@ -49,6 +49,46 @@ router.get('/ReclamationsClient', Authorisation, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch user Reclamations" });
   }
 });
+router.get('/dashboard/statsRec/:year', async (req, res) => {
+  const year = parseInt(req.params.year, 10);
+
+  try {
+    const startDate = new Date(`${year}-01-01`);
+    const endDate = new Date(`${year}-12-31`);
+
+    const statistics = await Reclamation.aggregate([
+      {
+        $match: {
+          dateRec: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: { month: { $month: '$dateRec' } },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          month: '$_id.month',
+          count: 1,
+          _id: 0,
+        },
+      },
+      {
+        $sort: {
+          month: 1,
+        },
+      },
+    ]);
+
+    res.json(statistics);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des statistiques' });
+  }
+});
+
 
 // router.get("/:email/dashboardReclamation",Authorisation, async (req, res) => {
 //   try {

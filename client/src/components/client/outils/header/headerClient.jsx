@@ -3,8 +3,8 @@ import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button } from '
 import PropTypes from 'prop-types';
 
 // components
-import Profile from './profileClient';
 import { IconBellRinging, IconMenu } from '@tabler/icons';
+import ProfileClient from './profileClient';
 
 const HeaderClient = (props) => {
 
@@ -62,7 +62,7 @@ const HeaderClient = (props) => {
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
         
-          <Profile />
+          <ProfileClient />
         </Stack>
       </ToolbarStyled>
     </AppBarStyled>

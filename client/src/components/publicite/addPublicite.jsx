@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import HeaderClient from "../client/outils/header/headerClient";
 import SidebarClient from "../client/outils/sidebar/sidebarClient";
 import "./AddPublicite.css";
@@ -34,7 +34,7 @@ const AddPublicite = () => {
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedTypeEspace, setSelectedTypeEspace] = useState("");
   const [cities, setCities] = useState([]);
-
+  const navigate = useNavigate(); // Initialize useNavigate hook
   useEffect(() => {
     fetchEspacePublic();
   }, [selectedGovernorate, selectedCity, selectedTypeEspace]);
@@ -117,6 +117,9 @@ const AddPublicite = () => {
       });
       console.log("Advertisement saved:", response.data);
       toast.success('Demande de publicité est envoyé avec succès');
+      setTimeout(() => {
+        navigate(`/publicitesManagementPub/${window.btoa(email)}`);
+      }, 6500);
       // Handle success (e.g., show a success message)
     } catch (error) {
       if (error.response && error.response.data) {

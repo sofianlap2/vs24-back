@@ -15,7 +15,7 @@ import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
 import { IconListCheck, IconMail, IconUser, IconCircleDashed } from '@tabler/icons';
 
-const Profile = () => {
+const ProfileClient = () => {
   const [user, setUser] = useState(null);
   const [anchorEl2, setAnchorEl2] = useState(null);
   const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -27,6 +27,8 @@ const Profile = () => {
     const decodedToken = jwtDecode(token);
     email = decodedToken.email;
   }
+
+ 
 
   useEffect(() => {
     fetchUser();
@@ -49,6 +51,8 @@ const Profile = () => {
       console.error("Error fetching user:", error);
     }
   };
+ // Add appUrl to dependencies just in case
+
 
   const handleLogout = async () => {
     try {
@@ -195,4 +199,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileClient;

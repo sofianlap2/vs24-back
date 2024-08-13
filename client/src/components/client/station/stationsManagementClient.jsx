@@ -122,7 +122,7 @@ const StationsManagementClient = () => {
                 />
               ) : (
                 <Box>
-                  {station.map((s) => (
+                  {stations.map((s) => (
                     <Box key={s.id}  p={2}
                     mb={2}
                     bgcolor={"transparent"}

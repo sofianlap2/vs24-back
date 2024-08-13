@@ -46,6 +46,8 @@ import EspaceSansPub from "./components/publicite/epaceSansPub";
 import PublicitesManagementPub from "./components/publicite/publiciteManagementPub";
 import PublicitesManagement from "./components/admin/publicites/publicitesManagement";
 import DecisionPub from "./components/admin/publicites/decisionPub";
+import DashboardClient from "./components/client/outils/dashboard/DashboardClient";
+import Publicitee from "./components/client/outils/Publicitee";
 
 function App() {
   const { email } = useParams();
@@ -136,6 +138,9 @@ function App() {
           {(role === "CLIENT" || role === "PUBLICITAIRE") && verified === true ? (<>
           <Route path="/addReclamation/:email" element={<AddReclamation />} />
           <Route path="/reclamationsClient/:email" element={<ReclamationsManagementClient />} />
+          <Route path="/dashboardClient" element={<DashboardClient />} />
+          <Route path="/Publicitee/:email" element={<Publicitee />} />
+
           <Route path="/espacesClient/:email" element={<EspacesManagementClient />} />
           <Route path="/espacesSansPub/:email" element={<EspaceSansPub />} />
 
