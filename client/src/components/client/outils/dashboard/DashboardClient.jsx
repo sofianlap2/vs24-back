@@ -72,9 +72,9 @@ const DashboardClient = () => {
             isMobileSidebarOpen={isMobileSidebarOpen}
             onSidebarClose={() => setMobileSidebarOpen(false)} />}
             </div>
-            <div className="row" style={styles.chart}>
+            {/* <div className="row" style={styles.chart}>
             <Chartpie/>
-            </div>
+            </div> */}
            <div className="row" style={styles.chart}>
             <ChartReclamation/>
             </div>

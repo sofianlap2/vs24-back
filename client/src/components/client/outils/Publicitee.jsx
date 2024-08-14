@@ -51,7 +51,7 @@ const Publicitee = () => {
         }));
         const publicitesWithDetails = publicitesWithIds.map((publicite) => ({
             ...publicite,
-            user: publicite.user?.email || "",
+            user: publicite.user && publicite.user.email ? publicite.user.email : "No User",
           }));
         setPublicites(publicitesWithDetails);
       } catch (error) {
@@ -72,7 +72,7 @@ const Publicitee = () => {
   const columns = [
     { field: "dateDebPub", headerName: "Date début", flex: 1, renderCell: renderDateRec },
     { field: "dateFinPub", headerName: "Date fin", flex: 1, renderCell: renderDateRec },
-    { field: "publicitaire", headerName: "Publicitaire", flex: 1 },
+    { field: "user", headerName: "Publicitaire", flex: 1 },
   ];
 
   return (

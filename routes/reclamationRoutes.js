@@ -49,16 +49,28 @@ router.get('/ReclamationsClient', Authorisation, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch user Reclamations" });
   }
 });
-router.get('/dashboard/statsRec/:year', async (req, res) => {
-  const year = parseInt(req.params.year, 10);
-
+router.get('/dashboard/statsRec/:year', Authorisation, async (req, res) => {
   try {
+    // Obtenir l'email de l'utilisateur à partir du middleware Authorisation
+    const userEmail = req.userEmail;
+
+    // Rechercher l'utilisateur par email
+    const user = await User.findOne({ email: userEmail });
+
+    // Vérifier si l'utilisateur existe
+    if (!user) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
+
+    const year = parseInt(req.params.year, 10);
     const startDate = new Date(`${year}-01-01`);
     const endDate = new Date(`${year}-12-31`);
 
+    // Agrégation pour obtenir les statistiques par mois, filtrée par l'utilisateur connecté
     const statistics = await Reclamation.aggregate([
       {
         $match: {
+          user: user._id, // Filtrer par l'ID de l'utilisateur connecté
           dateRec: { $gte: startDate, $lte: endDate },
         },
       },
@@ -84,10 +96,10 @@ router.get('/dashboard/statsRec/:year', async (req, res) => {
 
     res.json(statistics);
   } catch (error) {
-    console.error('Error fetching statistics:', error);
     res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des statistiques' });
   }
 });
+
 
 
 // router.get("/:email/dashboardReclamation",Authorisation, async (req, res) => {

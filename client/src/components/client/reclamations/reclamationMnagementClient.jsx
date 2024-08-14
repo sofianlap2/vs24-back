@@ -90,8 +90,12 @@ const ReclamationsManagementClient = () => {
   const columns = [
     { field: "dateRec", headerName: "Date Reclamation", flex: 1, renderCell: renderDateRec },
    
-    { field: "cathegorieName", headerName: "Cathegorie", flex: 1 }, // Displaying the cathegorie name
+    { field: "cathegorie", headerName: "Catégorie", flex: 1 ,
+    renderCell: (params) => params.row.cathegorie ? params.row.cathegorie.nomCat : 'N/A'
+    },
     { field: "description", headerName: "Description", flex: 1 },
+    { field: "status", headerName: "status", flex: 1 },
+
   ];
 
   return (
@@ -107,7 +111,7 @@ const ReclamationsManagementClient = () => {
         <div className="row">
           <div style={{ width: "100%" }}>
             <Box
-              m="11vh 10vw 0 5vw"
+              m="5vh 10vw 0 5vw"
               height="75vh"
               width="60vw"
               sx={{
@@ -132,8 +136,10 @@ const ReclamationsManagementClient = () => {
                     <Box key={r.id} p={2} mb={2} bgcolor={"transparent"} borderRadius="8px" boxShadow={20}marginLeft={"10vw"}>
                      
                       <Typography style={{fontFamily: 'Constantia'}}>Date Reclamation: {renderDateRec({ value: r.dateRec })}</Typography>
-                      <Typography style={{fontFamily: 'Constantia'}}>Cathegorie: {r.cathegorieName}</Typography>
+                      <Typography style={{fontFamily: 'Constantia'}}>Cathegorie: {r.cathegorie.nomCat}</Typography>
                       <Typography style={{fontFamily: 'Constantia'}}>Description: {r.description}</Typography>
+                      <Typography style={{fontFamily: 'Constantia'}}>Status: {r.status}</Typography>
+
                     </Box>
                   ))}
                 </Box>

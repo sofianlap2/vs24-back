@@ -73,9 +73,9 @@ const SidebarItems = () => {
   
     {
       id: uniqueId(),
-      title: 'Dashboardd',
+      title: 'Dashboard',
       icon: IconLayoutDashboard,
-      href: '/dashboardClient',
+      href: `/dashboardClient/${window.btoa(email)}`,
     },
     {
       navlabel: true,
@@ -93,18 +93,19 @@ const SidebarItems = () => {
       icon: IconBuildingSkyscraper,
       href: `/espacesClient/${window.btoa(email)}`,
     },
-    {
-      id: uniqueId(),
-      title: 'Publicitee',
-      icon: IconBuildingSkyscraper,
-      href: `/Publicitee/${window.btoa(email)}`,
-    },
+
    // Ici, on place les éléments conditionnels à l'endroit où ils doivent apparaître
    shouldShowStation(role, verified) && {
     id: uniqueId(),
     title: 'Stations',
     icon: IconBuildingSkyscraper,
     href: `/stationsClient/${window.btoa(email)}`,
+  },
+  shouldShowStation(role, verified) && {
+    id: uniqueId(),
+      title: 'Publicitee',
+      icon: IconBuildingSkyscraper,
+      href: `/Publicitee/${window.btoa(email)}`,
   },
   shouldShowEspace(role, verified) && {
     id: uniqueId(),

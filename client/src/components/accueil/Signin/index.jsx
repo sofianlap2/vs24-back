@@ -60,7 +60,7 @@ const SignIn = () => {
           redirectUrl = `/dashboard/${window.btoa(email)}`;
         } else if (role === "CLIENT" || role === "PUBLICITAIRE") {
           redirectUrl = `/dashboardClient/${window.btoa(email)}`;
-        }  else {
+        } else {
           throw new Error("Rôle invalide");
         }
         

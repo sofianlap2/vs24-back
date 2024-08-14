@@ -138,7 +138,7 @@ function App() {
           {(role === "CLIENT" || role === "PUBLICITAIRE") && verified === true ? (<>
           <Route path="/addReclamation/:email" element={<AddReclamation />} />
           <Route path="/reclamationsClient/:email" element={<ReclamationsManagementClient />} />
-          <Route path="/dashboardClient" element={<DashboardClient />} />
+          <Route path="/dashboardClient/:email" element={<DashboardClient />} />
           <Route path="/Publicitee/:email" element={<Publicitee />} />
 
           <Route path="/espacesClient/:email" element={<EspacesManagementClient />} />

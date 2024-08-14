@@ -46,6 +46,7 @@ const AddReclamation = () => {
           }
         );
         setCategories(response.data);
+        
       } catch (error) {
         console.error('Error fetching categories:', error);
         setEchec('Erreur lors de la récupération des catégories');
@@ -110,23 +111,32 @@ const AddReclamation = () => {
             <br />
             <ToastContainer />
             <div>
-              <label style={{fontFamily: 'Constantia'}}>Catégorie:</label>
-              <select
-                className="form-select"
-                aria-label="Default select example"
-                value={selectedCategorie}
-                onChange={(e) => setSelectedCategorie(e.target.value)}
-                style={{ width: '100%', padding: '8px', marginBottom: '16px' }}
-              >
-                <option style={{fontFamily: 'Constantia'}}value="" disabled selected>Select Catégorie</option>
-                {cathegories.map((cathegorie) => (
-                  <option key={cathegorie._id} value={cathegorie._id} style={{fontFamily: 'Constantia'}}>{cathegorie.name}</option>
-                ))}
-              </select>
-            </div>
+  <label style={{ fontFamily: 'Constantia' }}>Catégorie:</label>
+  <select
+    className="form-select"
+    aria-label="Default select example"
+    value={selectedCategorie}
+    onChange={(e) => setSelectedCategorie(e.target.value)}
+    style={{ width: '100%', padding: '8px', marginBottom: '16px' }}
+  >
+    <option style={{ fontFamily: 'Constantia' }} value="" disabled>
+      Select Catégorie
+    </option>
+    {cathegories.map((cathegorie) => (
+      <option
+        key={cathegorie._id}
+        value={cathegorie._id}
+        style={{ fontFamily: 'Constantia' }}
+      >
+        {cathegorie.nomCat}
+      </option>
+    ))}
+  </select>
+</div>
+
             <div>
               <label style={{fontFamily: 'Constantia'}}>Description:</label>
-              <input style={{fontFamily: 'Constantia',width: '100%', padding: '8px', marginBottom: '16px'}}
+              <input className="form-control" style={{fontFamily: 'Constantia',width: '100%', padding: '8px', marginBottom: '16px'}}
                 type="text"
                 value={reqBody.description}
                 onChange={(e) => setReqBody({ ...reqBody, description: e.target.value })}
