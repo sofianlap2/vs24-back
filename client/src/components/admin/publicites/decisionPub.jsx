@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, Typography, Button, Stack } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../outils/Header";
@@ -29,17 +28,18 @@ const DecisionPub = () => {
         const response = await axios.get(`${appUrl}/publicites/getPub/${pubId}`, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: ` ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        if (response.data && response.data.user) {
+        if (response.data) {
           setReqBody(response.data);
-          console.log("Video Data:", response.data.video);
+          console.log("Fetched Publicite:", response.data);
         } else {
           toast.error("Invalid response format.");
         }
       } catch (error) {
+        console.error("Error fetching publicite details:", error);
         toast.error("Failed to fetch publicite details.");
       }
     };
@@ -52,15 +52,15 @@ const DecisionPub = () => {
 
     try {
       const token = Cookies.get("token");
+      console.log("Status to update:", reqBody.status);
+
       await axios.put(
         `${appUrl}/publicites/updatePub/${pubId}`,
-        {
-          status: reqBody.status,
-        },
+        { status: reqBody.status },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: ` ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -70,6 +70,7 @@ const DecisionPub = () => {
         navigate(`/dashboard/${window.btoa(email)}`);
       }, 3000);
     } catch (error) {
+      console.error("Error updating publicite:", error);
       toast.error("Erreur lors de la mise à jour de la publicité");
     }
   };
@@ -86,9 +87,9 @@ const DecisionPub = () => {
       const videoSrc = `data:${reqBody.video.contentType};base64,${reqBody.video.data}`;
       return (
         <video
-          width="320" 
-          height="240" 
-          controls 
+          width="320"
+          height="240"
+          controls
           onError={(e) => {
             console.error("Error loading video:", e.nativeEvent);
             toast.error("Error loading video. Please check the console for more details.");
@@ -101,8 +102,6 @@ const DecisionPub = () => {
     }
     return null;
   };
-  
-
 
   return (
     <main id="updatePublicite" className="updatePublicite">
@@ -110,59 +109,59 @@ const DecisionPub = () => {
       <div style={{ display: "flex" }}>
         <Sidebarrr />
         <div style={{ justifyContent: "center", display: "flex" }}>
-          {reqBody ? (
-            <form
-              onSubmit={handleFormSubmit}
-              style={{ marginTop: "15vh", marginLeft: "25vw", width: "60%" }}
-            >
-              <h3 style={{ fontFamily: "Constantia", fontWeight: "bold" }}>
-                Mettre à jour une publicité
-              </h3>
-              <br />
-              <ToastContainer />
-              <ul>
-                <li>
+          <form
+            onSubmit={handleFormSubmit}
+            style={{ marginTop: "15vh", marginLeft: "25vw", width: "60%" }}
+          >
+            <h3 style={{ fontFamily: "Constantia", fontWeight: "bold" }}>
+              Mettre à jour une publicité
+            </h3>
+            <br />
+            <ToastContainer />
+            <ul>
+              <li>
+                <p style={{ fontFamily: "Constantia" }}>
+                  <strong>Nom et Prénom:</strong> {reqBody.user.fullName}
+                </p>
+                <p style={{ fontFamily: "Constantia" }}>
+                  <strong>Email:</strong> {reqBody.user.email}
+                </p>
+                <p style={{ fontFamily: "Constantia" }}>
+                  <strong>Numéro Téléphone:</strong> {reqBody.user.phoneNumber}
+                </p>
+                <p style={{ fontFamily: "Constantia" }}>
+                  <strong>Numéro Téléphone 2:</strong> {reqBody.user.phoneNumber2}
+                </p>
+              </li>
+            </ul>
+            <ul>
+              {reqBody.espacePublic.map((espace, index) => (
+                <li key={index}>
                   <p style={{ fontFamily: "Constantia" }}>
-                    <strong>Nom et Prénom:</strong> {reqBody.user.fullName}
+                    <strong>Nom de l'espace:</strong> {espace.nomEspace}
                   </p>
                   <p style={{ fontFamily: "Constantia" }}>
-                    <strong>Email:</strong> {reqBody.user.email}
+                    <strong>Type d'espace:</strong> {espace.typeEspace}
                   </p>
                   <p style={{ fontFamily: "Constantia" }}>
-                    <strong>Numéro Téléphone:</strong> {reqBody.user.phoneNumber}
+                    <strong>Gouvernorat:</strong> {espace.gouvernorat}
                   </p>
                   <p style={{ fontFamily: "Constantia" }}>
-                    <strong>Numéro Téléphone 2:</strong> {reqBody.user.phoneNumber2}
+                    <strong>Ville:</strong> {espace.ville}
                   </p>
                 </li>
-              </ul>
-              <ul>
-                {reqBody.espacePublic.map((espace, index) => (
-                  <li key={index}>
-                    <p style={{ fontFamily: "Constantia" }}>
-                      <strong>Nom de l'espace:</strong> {espace.nomEspace}
-                    </p>
-                    <p style={{ fontFamily: "Constantia" }}>
-                      <strong>Type d'espace:</strong> {espace.typeEspace}
-                    </p>
-                    <p style={{ fontFamily: "Constantia" }}>
-                      <strong>Gouvernorat:</strong> {espace.gouvernorat}
-                    </p>
-                    <p style={{ fontFamily: "Constantia" }}>
-                      <strong>Ville:</strong> {espace.ville}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-              <p>
-                <strong style={{ fontFamily: "Constantia" }}>Date début Publicité:</strong> {renderDateRec({ value: reqBody.dateDebPub })}
-              </p>
-              <p>
-                <strong style={{ fontFamily: "Constantia" }}>Date fin Publicité:</strong> {renderDateRec({ value: reqBody.dateFinPub })}
-              </p>
-              <br />
-              {renderVideo()}
-<br />
+              ))}
+            </ul>
+            <p>
+              <strong style={{ fontFamily: "Constantia" }}>Date début Publicité:</strong> {renderDateRec({ value: reqBody.dateDebPub })}
+            </p>
+            <p>
+              <strong style={{ fontFamily: "Constantia" }}>Date fin Publicité:</strong> {renderDateRec({ value: reqBody.dateFinPub })}
+            </p>
+            <br />
+            {renderVideo()}
+            <br />
+            {reqBody.status === "En attente" ? (
               <div>
                 <label style={{ fontFamily: "Constantia" }}>Status:</label>
                 <select
@@ -170,7 +169,7 @@ const DecisionPub = () => {
                   value={reqBody.status}
                   onChange={(e) => setReqBody({ ...reqBody, status: e.target.value })}
                 >
-                  <option style={{ fontFamily: "Constantia" }} value="" disabled selected>
+                  <option style={{ fontFamily: "Constantia" }} value="" disabled>
                     Status
                   </option>
                   <option style={{ fontFamily: "Constantia" }} value="Accepté">
@@ -180,22 +179,24 @@ const DecisionPub = () => {
                     Refusé
                   </option>
                 </select>
+                <button
+                  type="submit"
+                  className="btn btn-success"
+                  style={{
+                    marginTop: "2vh",
+                    fontFamily: "Constantia",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Modifier Publicité
+                </button>
               </div>
-              <button
-                type="submit"
-                className="btn btn-success"
-                style={{
-                  marginTop: "2vh",
-                  fontFamily: "Constantia",
-                  fontWeight: "bold",
-                }}
-              >
-                Modifier Publicité
-              </button>
-            </form>
-          ) : (
-            <p>Loading...</p>
-          )}
+            ) : (
+              <p>
+                <strong style={{ fontFamily: "Constantia" }}>Status:</strong> {reqBody.status}
+              </p>
+            )}
+          </form>
         </div>
       </div>
     </main>

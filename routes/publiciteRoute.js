@@ -113,7 +113,32 @@ router.get("/getPub/:id", async (req, res) => {
       return res.status(400).json({ msg: 'Publicité non trouvée' });
     }
 
-    res.json(publicite);
+    // Convert video data to base64
+    const videoBase64 = publicite.video.data.toString('base64');
+
+    res.json({ ...publicite.toObject(), video: { data: videoBase64, contentType: publicite.video.contentType } });
+  } catch (err) {
+    console.error("Error fetching publicite:", err);
+    res.status(500).send("Server Error");
+  }
+});
+router.get("/getPubPub/:id", async (req, res) => {  try {
+    const { id } = req.params;
+
+    const publicite = await Publicite.findById(id)
+      .populate({
+        path: 'espacePublic',
+        select: 'nomEspace typeEspace gouvernorat ville' // Specify the fields you want to include
+      });
+
+    if (!publicite) {
+      return res.status(400).json({ msg: 'Publicité non trouvée' });
+    }
+
+    // Convert video data to base64
+    const videoBase64 = publicite.video.data.toString('base64');
+
+    res.json({ ...publicite.toObject(), video: { data: videoBase64, contentType: publicite.video.contentType } });
   } catch (err) {
     console.error("Error fetching publicite:", err);
     res.status(500).send("Server Error");
@@ -123,10 +148,10 @@ router.get("/getPub/:id", async (req, res) => {
 
 
 
+
 // Update the status of a specific publicite
 router.put("/updatePub/:id", Authorisation, async (req, res) => {
   try {
-    const { status } = req.body;
     const updatedPub = await Publicite.findByIdAndUpdate(
       req.params.id,
       req.body,

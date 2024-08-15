@@ -15,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from the React app's build directory
+app.use(express.static(path.join(__dirname, '/client/dist')));
 
 // Routes
 const publiciteRoutes = require('./routes/publiciteRoute');
@@ -33,6 +34,7 @@ const userDeletedRoute = require('./routes/userDeletedRoute');
 const notificationRoute = require('./routes/notificationRoute');
 const connectDB = require('./database');
 const globalErrorHandler = require('./security/globalErrorHandler');
+const questionRoues = require('./routes/questionRoutes');
 
 // Initialize admin account and connect to the database
 adminAccount();
@@ -43,8 +45,9 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: '*',
-    methods: ['GET', 'POST'],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   },
 });
 
@@ -85,11 +88,12 @@ app.use('', resetPassword);
 app.use('/demandes', demandeRoutes);
 app.use('/cassiers', cassierRoutes);
 app.use('/demandeRejet', demandeRejet);
+app.use('/questions', questionRoues);
 
+// Error handling middleware
 app.use(globalErrorHandler);
 
-app.use(express.static(path.join(__dirname, '/client/dist')));
-
+// Catch-all route to serve the React app
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/client/dist/index.html'));
 });

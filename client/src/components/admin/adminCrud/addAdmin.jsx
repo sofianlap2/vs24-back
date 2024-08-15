@@ -56,7 +56,7 @@ const AddAdmin = () => {
           },
         }
       );
-      toast.success("EspacePublic est ajouté avec successé");
+      toast.success("Admin est ajouté avec successé");
       // Clear form fields or show success message
       setTimeout(() => {
         navigate(`/dashboard/${window.btoa(email)}`);

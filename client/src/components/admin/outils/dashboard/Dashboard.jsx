@@ -53,6 +53,7 @@ const Dashboard = () => {
       height: "300px",
       maxWidth: isMobile ? "70vw" : "40vw",
       marginLeft: isMobile ? "-10vw" : "10vw",
+      marginTop:"5vh",
       zIndex:20,
       
     },

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, useTheme, Stack, useMediaQuery } from "@mui/material";
+import { Box, Typography, useTheme, Stack, useMediaQuery,Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { Button } from "../../accueil/ButtonElement";
 import Header from "../outils/Header";
 import Sidebarrr from "../outils/Sidebar";
 import { tokens } from "../../../theme";
@@ -101,7 +100,7 @@ const StationsManagement = () => {
       fetchStation();
     }
   }, [email, tokenValue]);
-  const shouldShowAddAdmin = (role,verified) => {
+  const shouldShowAddStation = (role,verified) => {
     return (role === 'SUPERADMIN' || role === 'ADMINCLIENT') && verified === true ;
   };
   const  renderDate = (params) => {
@@ -121,6 +120,29 @@ const StationsManagement = () => {
     { field: "dateFinLoc", headerName: "Fin location", flex: 1 , renderCell:  renderDate},
     { field: "status", headerName: "Status", flex: 1 },
   ];
+  if (shouldShowAddStation(role, verified)) {
+    columns.push({
+      field: "button",
+      headerName: "Actions",
+      flex: 1.5,
+      renderCell: (params) => (
+        <Stack direction="row" spacing={1} style={{ justifyContent: "center", fontSize: "small" }}>
+          <Button
+            variant="outlined"
+            class="btn btn-outline-info"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate( `/updateStation/${params.row._id}`);
+            }}
+            style={{ marginTop: "1vh", fontSize: "small" }}
+          >
+            Modifier
+          </Button>
+         
+        </Stack>
+      ),
+    });
+  }
 
   return (
     <main id="station" className="station">
@@ -158,21 +180,30 @@ const StationsManagement = () => {
                     borderRadius="8px"
                     boxShadow={20}>
                        <Typography style={{fontFamily: 'Constantia'}} variant="h6">{s.numero}</Typography>
-                       <Typography style={{fontFamily: 'Constantia'}}>Espace Public: {s.espacePublicS}</Typography>
-                       <Typography style={{fontFamily: 'Constantia'}}>Secteur Activite: {s.secteurActiviteS}</Typography>
-                       <Typography style={{fontFamily: 'Constantia'}}>Gouvernorat: {s.gouvernoratS}</Typography>
-                       <Typography style={{fontFamily: 'Constantia'}}>Ville: {s.villeS}</Typography>
                        <Typography style={{fontFamily: 'Constantia'}}>Model: {s.modelStation}</Typography>
                        <Typography style={{fontFamily: 'Constantia'}}>Date Fabrication: {renderDate({value:s.dateFab})}</Typography>
                        <Typography style={{fontFamily: 'Constantia'}}>Entretient: {renderDate({value:s.dateEntretient})}</Typography>
                        <Typography style={{fontFamily: 'Constantia'}}>Fin Location: {renderDate({value:s.dateFinLoc})}</Typography>
                        <Typography style={{fontFamily: 'Constantia'}}>Status: {s.status}</Typography>
-
+                       { shouldShowAddStation(role,verified) && (<Stack direction="row" spacing={1} style={{ justifyContent: "center", fontSize: "small" }}>
+                      <Button
+                        variant="outlined"
+                        class="btn btn-outline-info"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate( `/updateStation/${station._id}`);
+                        }}
+                        style={{ marginTop: "1vh", fontSize: "small" }}
+                      >
+                        Modifier
+                      </Button>
+                      
+                    </Stack>)}
                     </Box>
                   ))}
                 </Box>
               )}
-              {shouldShowAddAdmin(role,verified) && (
+              {shouldShowAddStation(role,verified) && (
               <button
                 style={{ height: "40px", width: "20vh", justifyItems: 'center', marginTop: '2vh',fontFamily: 'Constantia',fontWeight:"bold" }}
                 onClick={handleButtonClick}

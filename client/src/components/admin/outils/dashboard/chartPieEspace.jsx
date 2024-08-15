@@ -57,8 +57,8 @@ const ChartPieEspace = () => {
     chartContainer: {
       flex: '1 1 50%',
       height: '300px',
-      maxWidth: '400px',
-      margin: '10px',
+      maxWidth: '100%',
+            margin: '10px',
       marginTop: '10vh',
     },
     chart: {
@@ -105,7 +105,6 @@ const ChartPieEspace = () => {
     labels: {
       text: {
         fill: '#ffffff', // Change this to a color that contrasts better with the background
-        fontSize: isMobile ? '12px' : '16px', // Adjust the font size based on the screen size
 
       },
     },
@@ -114,7 +113,7 @@ const ChartPieEspace = () => {
   return (
     <div style={styles.chart}>
       <h3 style={styles.h3}>
-      <b style={{fontFamily:'sans-serif'}}>2-</b> Espace Public par Gouvernorat
+     Espace Public par Gouvernorat
       </h3>
       <div style={styles.chart1}>
       <ResponsivePie

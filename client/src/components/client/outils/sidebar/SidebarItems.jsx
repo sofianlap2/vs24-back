@@ -8,6 +8,9 @@ import NavGroup from './NavGroup/NavGroup';
 import {
   IconBell,
   IconBuildingSkyscraper,
+   IconChargingPile,
+   IconHelp,
+   IconHexagonLetterA,
    IconLayoutDashboard,
    IconLayoutSidebarLeftCollapse,
 } from '@tabler/icons';
@@ -94,9 +97,15 @@ const SidebarItems = () => {
       ? [{
           id: uniqueId(),
           title: 'Stations',
-          icon: IconBuildingSkyscraper,
+          icon: IconChargingPile,
           href: `/stationsClient/${window.btoa(email)}`,
-        }]
+        },
+        {
+          id: uniqueId(),
+          title: 'Questionnaire',
+          icon: IconHelp,
+          href: `/addQuestion/${window.btoa(email)}`,
+        },]
       : []
     ),
     ...(

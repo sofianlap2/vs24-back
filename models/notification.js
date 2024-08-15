@@ -27,5 +27,13 @@ const NotificationSchema = new Schema({
   },
 });
 
+// Pre-save hook to ensure createdAt is a valid date
+NotificationSchema.pre('save', function(next) {
+  if (!this.createdAt || isNaN(new Date(this.createdAt).getTime())) {
+    this.createdAt = Date.now(); // Default to current date if invalid
+  }
+  next();
+});
+
 const Notification = mongoose.model('Notification', NotificationSchema);
 module.exports = Notification;
