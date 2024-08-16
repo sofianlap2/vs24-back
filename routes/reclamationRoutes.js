@@ -26,7 +26,7 @@ router.post('/:email/addReclamation', Authorisation, asyncErrorHandler(async (re
   await Notification.create({
     type: 'reclamation',
     referenceId: savedReclamation._id,
-    message: `${user.fullName} a une nouvelle réclamation dans la catégorie ${cathegorie.name}`,
+    message: `${user.fullName} a une nouvelle réclamation dans la catégorie ${cathegorie.nomCat}`,
   });
   res.status(200).json(savedReclamation);
 }));
@@ -49,7 +49,30 @@ router.get('/ReclamationsClient', Authorisation, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch user Reclamations" });
   }
 });
+router.get("/:id", async (req, res) => {
+  try {
+    const reclamation = await Reclamation.findById(req.params.id).populate('user').populate('cathegorie');
+    res.json(reclamation);
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+});
 
+router.put("/updateReclamation/:id", asyncErrorHandler(async (req, res) => {
+  try {
+    const updateReclamation = await Reclamation.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updateReclamation) {
+      return res.status(400).json({ msg: 'Publicité non trouvée' });
+    }
+    res.json(updateReclamation);
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+}));
 // router.get("/:email/dashboardReclamation",Authorisation, async (req, res) => {
 //   try {
 //       const countByGouvernorat = await Reclamation.aggregate([

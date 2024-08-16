@@ -85,12 +85,12 @@ router.post("/logout", async(req, res) => {
   }
 
   const expiresAt = Date.now() + 86400 * 1000;
-  const BlackListToken = new BlackListToken({
+  const blackListToken = new BlackListToken({
     token: token,
     expiresAt: new Date(expiresAt),
   });
 
-  BlackListToken
+  blackListToken
     .save()
     .then(() => {
       res.json({ message: "Déconnexion réussie" });

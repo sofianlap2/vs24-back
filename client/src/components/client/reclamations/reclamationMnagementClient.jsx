@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, useTheme, useMediaQuery,Container } from "@mui/material";
+import { Box, Typography, useTheme, useMediaQuery, Container, Stack, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
-import { useLocation, useParams, useNavigate ,Outlet} from "react-router-dom";
+import { useLocation, useParams, useNavigate, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
-import Header from "../../admin//outils/Header";
-import Sidebarrr from "../../admin//outils/Sidebar";
+import HeaderClient from "../outils/header/headerClient";
+import SidebarClient from "../outils/sidebar/sidebarClient";
 import { tokens } from "../../../theme";
 import { format, isToday, parseISO } from "date-fns";
-import SidebarClient from "../outils/sidebar/sidebarClient";
-import HeaderClient from "../outils/header/headerClient";
 
 const ReclamationsManagementClient = () => {
   const { email } = useParams();
@@ -33,14 +31,9 @@ const ReclamationsManagementClient = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [role, setUserRole] = useState("");
 
- 
   const handleButtonClickk = () => {
     navigate(`/addReclamation/${window.btoa(email)}`);
   };
-  
-
-
- 
 
   useEffect(() => {
     const fetchReclamations = async () => {
@@ -57,13 +50,12 @@ const ReclamationsManagementClient = () => {
 
         const reclamationsWithIds = response.data.map((row) => ({
           ...row,
-          id: row._id, // Assuming _id is the unique identifier
+          id: row._id,
         }));
 
         const reclamationsWithDetails = reclamationsWithIds.map((reclamation) => ({
           ...reclamation,
-          
-          cathegorieName: reclamation.cathegorie?.name || "", // Assuming 'name' is an attribute in the Cathegorie model
+          cathegorieName: reclamation.cathegorie?.nomCat || "",
         }));
 
         setReclamations(reclamationsWithDetails);
@@ -77,8 +69,6 @@ const ReclamationsManagementClient = () => {
     }
   }, [email, tokenValue]);
 
-
-
   const renderDateRec = (params) => {
     const date = parseISO(params.value);
     if (isToday(date)) {
@@ -87,23 +77,64 @@ const ReclamationsManagementClient = () => {
     return format(date, 'dd/MM/yyyy');
   };
 
-  const columns = [
+  // Define base columns without the "Actions" column
+  const baseColumns = [
     { field: "dateRec", headerName: "Date Reclamation", flex: 1, renderCell: renderDateRec },
-   
-    { field: "cathegorieName", headerName: "Cathegorie", flex: 1 }, // Displaying the cathegorie name
+    { field: "cathegorieName", headerName: "Cathegorie", flex: 1 },
     { field: "description", headerName: "Description", flex: 1 },
+    { field: "status", headerName: "Statut", flex: 1 },
   ];
+
+  // Check if any row has a status of "en cours"
+  const hasEnCoursStatus = reclamations.some((reclamation) => reclamation.status === "en cours");
+
+  // Add the "Actions" column if there are any "en cours" status
+  const columns = hasEnCoursStatus
+    ? [
+        ...baseColumns,
+        {
+          field: "button",
+          headerName: "Actions",
+          flex: 1.5,
+          renderCell: (params) => (
+            params.row.status === "en cours" && (
+              <Stack direction="row" spacing={1} style={{ justifyContent: "center", fontSize: "small" }}>
+                <Button
+                  variant="outlined"
+                  class="btn btn-outline-info"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/updateReclamation/${params.row._id}`);
+                  }}
+                  style={{ marginTop: "1vh", fontSize: "small" }}
+                >
+                  Modifier
+                </Button>
+              </Stack>
+            )
+          ),
+        },
+      ]
+    : baseColumns;
 
   return (
     <main id="reclamation" className="reclamation">
-{      shouldShowHeader &&  <HeaderClient toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
-}        
-        
-        <div style={{ display: 'flex' }}>
-     {shouldShowHeader&& <SidebarClient isSidebarOpen={isSidebarOpen}
-        isMobileSidebarOpen={isMobileSidebarOpen}
-        onSidebarClose={() => setMobileSidebarOpen(false)} />}
-        
+      {shouldShowHeader && (
+        <HeaderClient
+          toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
+          toggleMobileSidebar={() => setMobileSidebarOpen(true)}
+        />
+      )}
+
+      <div style={{ display: "flex" }}>
+        {shouldShowHeader && (
+          <SidebarClient
+            isSidebarOpen={isSidebarOpen}
+            isMobileSidebarOpen={isMobileSidebarOpen}
+            onSidebarClose={() => setMobileSidebarOpen(false)}
+          />
+        )}
+
         <div className="row">
           <div style={{ width: "100%" }}>
             <Box
@@ -124,23 +155,62 @@ const ReclamationsManagementClient = () => {
                 <DataGrid
                   rows={reclamations}
                   columns={columns}
-                  getRowId={(row) => row.id} style={{fontFamily: 'Constantia'}}
+                  getRowId={(row) => row.id}
+                  style={{ fontFamily: "Constantia" }}
                 />
               ) : (
                 <Box>
                   {reclamations.map((r) => (
-                    <Box key={r.id} p={2} mb={2} bgcolor={"transparent"} borderRadius="8px" boxShadow={20}marginLeft={"10vw"}>
-                     
-                      <Typography style={{fontFamily: 'Constantia'}}>Date Reclamation: {renderDateRec({ value: r.dateRec })}</Typography>
-                      <Typography style={{fontFamily: 'Constantia'}}>Cathegorie: {r.cathegorieName}</Typography>
-                      <Typography style={{fontFamily: 'Constantia'}}>Description: {r.description}</Typography>
+                    <Box
+                      key={r.id}
+                      p={2}
+                      mb={2}
+                      bgcolor={"transparent"}
+                      borderRadius="8px"
+                      boxShadow={20}
+                      marginLeft={"10vw"}
+                    >
+                      <Typography style={{ fontFamily: "Constantia" }}>
+                        Date Reclamation: {renderDateRec({ value: r.dateRec })}
+                      </Typography>
+                      <Typography style={{ fontFamily: "Constantia" }}>
+                        Cathegorie: {r.cathegorieName}
+                      </Typography>
+                      <Typography style={{ fontFamily: "Constantia" }}>
+                        Description: {r.description}
+                      </Typography>
+                      <Typography style={{ fontFamily: "Constantia" }}>
+                        Statut: {r.status}
+                      </Typography>
+                      {r.status === "en cours" && (
+                        <Stack direction="row" spacing={1} style={{ justifyContent: "center", fontSize: "small" }}>
+                          <Button
+                            variant="outlined"
+                            class="btn btn-outline-info"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/updateReclamation/${r._id}`);
+                            }}
+                            style={{ marginTop: "1vh", fontSize: "small" }}
+                          >
+                            Modifier
+                          </Button>
+                        </Stack>
+                      )}
                     </Box>
                   ))}
                 </Box>
               )}
-             
+
               <button
-                style={{ height: "40px", width: "25vh", justifyItems: 'center', marginTop: '2vh' ,fontFamily: 'Constantia',fontWeight:"bold"}}
+                style={{
+                  height: "40px",
+                  width: "25vh",
+                  justifyItems: "center",
+                  marginTop: "2vh",
+                  fontFamily: "Constantia",
+                  fontWeight: "bold",
+                }}
                 onClick={handleButtonClickk}
                 className="btn btn-success"
               >

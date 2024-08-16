@@ -120,13 +120,13 @@ const AddReclamation = () => {
               >
                 <option style={{fontFamily: 'Constantia'}}value="" disabled selected>Select Catégorie</option>
                 {cathegories.map((cathegorie) => (
-                  <option key={cathegorie._id} value={cathegorie._id} style={{fontFamily: 'Constantia'}}>{cathegorie.name}</option>
+                  <option key={cathegorie._id} value={cathegorie._id} style={{fontFamily: 'Constantia'}}>{cathegorie.nomCat}</option>
                 ))}
               </select>
             </div>
             <div>
               <label style={{fontFamily: 'Constantia'}}>Description:</label>
-              <input style={{fontFamily: 'Constantia',width: '100%', padding: '8px', marginBottom: '16px'}}
+              <textarea style={{fontFamily: 'Constantia',width: '100%', padding: '8px', marginBottom: '16px',borderColor:"#000"}}
                 type="text"
                 value={reqBody.description}
                 onChange={(e) => setReqBody({ ...reqBody, description: e.target.value })}

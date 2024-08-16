@@ -15,11 +15,10 @@ import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
 import { IconListCheck, IconMail, IconUser, IconCircleDashed } from '@tabler/icons';
 
-const Profile = () => {
+const ProfileClient = () => {
   const [user, setUser] = useState(null);
   const [anchorEl2, setAnchorEl2] = useState(null);
   const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-
   // Retrieve email from token
   const token = Cookies.get("token");
   let email = "";
@@ -46,9 +45,12 @@ const Profile = () => {
       const userData = response.data;
       setUser(userData);
     } catch (error) {
-      console.error("Error fetching user:", error);
+      console.error("Failed to fetch user:", error);
     }
   };
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -63,7 +65,7 @@ const Profile = () => {
       );
       Cookies.remove("token");
     } catch (error) {
-      console.error("Error during logout:", error);
+      console.error("Erreur lors de la déconnexion :", error);
     }
   };
 
@@ -74,6 +76,7 @@ const Profile = () => {
   const handleClose2 = () => {
     setAnchorEl2(null);
   };
+
 
   return (
     <Box>
@@ -195,4 +198,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileClient;

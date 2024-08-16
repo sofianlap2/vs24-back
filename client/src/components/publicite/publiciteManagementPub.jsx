@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, useTheme, useMediaQuery,Container } from "@mui/material";
+import { Box, Typography, useTheme, useMediaQuery,Container ,Stack ,Button} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useLocation, useParams, useNavigate ,Outlet} from "react-router-dom";
@@ -87,6 +87,28 @@ const PublicitesManagementPub = () => {
     { field: "dateFinPub", headerName: "Date fin", flex: 1, renderCell: renderDateRec },
 
     { field: "status", headerName: "Status", flex: 1 },
+    {
+      field: "button",
+      headerName: "Actions",
+      flex: 1.5,
+      renderCell: (params) => (
+        <Stack direction="row" spacing={1} style={{ justifyContent: 'center', fontSize: 'small' }}>
+          <Button
+            variant="outlined"
+            class="btn btn-outline-info"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/updatePublicite/${params.row._id}`);
+            }}
+            style={{ marginTop: '1vh', fontSize: 'small' }}
+          >
+            Info
+          </Button>
+          
+         
+        </Stack>
+      ),
+    }
   ];
 
   return (

@@ -12,6 +12,8 @@ const ArchiveUsers = () => {
   const { email } = useParams();
   const tokenValue = Cookies.get("token");
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog1, setOpenDialog1] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [usersDeleted, setUsersDeleted] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
@@ -121,7 +123,16 @@ const ArchiveUsers = () => {
     setSelectedUser(user);
     setOpenDialog(true);
   };
+  const handleOpenDialog1 = (user) => {
+    setSelectedUser(user);
+    setOpenDialog1(true);
+  };
 
+  const handleCloseDialog1 = () => {
+    setOpenDialog1(false);
+    setSelectedUser(null);
+    setErrorMessage("");
+  };
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedUser(null);
@@ -141,7 +152,7 @@ const ArchiveUsers = () => {
             Authorization: `${tokenValue}`,
           },
         });
-        handleCloseDialog();
+        handleCloseDialog1();
       } catch (error) {
         setErrorMessage("Failed to delete user. Please try again.");
       }
@@ -211,7 +222,7 @@ const ArchiveUsers = () => {
             class="btn btn-outline-danger"
             onClick={(e) => {
               e.stopPropagation();
-              handleOpenDialog(params.row);
+              handleOpenDialog1(params.row);
             }}
             style={{ marginTop: "1vh", fontSize: "small" }}
           >
@@ -299,7 +310,7 @@ const ArchiveUsers = () => {
                       marginTop={"2vh"}
                     >
                         <Typography style={{fontFamily: 'Constantia'}} variant="h6">{user.fullName}</Typography>
-                       <Typography style={{fontFamily: 'Constantia'}}>Email: {user.email}</Typography>
+                       <Typography  style={{fontFamily: 'Constantia' ,wordWrap: 'break-word',overflow: 'hidden',textOverflow: 'ellipsis',}}>Email: {user.email}</Typography>
                        <Typography style={{fontFamily: 'Constantia'}}>Téléphone: {user.phoneNumber}</Typography>
                        <Typography style={{fontFamily: 'Constantia'}}>Téléphone 2: {user.phoneNumber2}</Typography>
 
@@ -322,7 +333,7 @@ const ArchiveUsers = () => {
                               class="btn btn-outline-danger"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleOpenDialog(user);
+                                handleOpenDialog1(user);
                               }}
                               style={{ marginTop: "1vh", fontSize: "small" }}
                             >
@@ -340,7 +351,7 @@ const ArchiveUsers = () => {
         </div>
       </div>
 
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog open={openDialog1} onClose={handleCloseDialog1}>
         <DialogTitle>Confirmation de suppression</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -349,7 +360,7 @@ const ArchiveUsers = () => {
           {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Annuler</Button>
+          <Button onClick={handleCloseDialog1}>Annuler</Button>
           <Button onClick={handleConfirmReject} color="error">
             Supprimer
           </Button>

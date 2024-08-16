@@ -7,6 +7,7 @@ import Profile from './profile';
 import LightModeOutlinedIcon from '@mui/icons-material/LightMode';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
+import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the delete button
 import { ColorModeContext, useMode } from '../../../theme';
 import io from 'socket.io-client';
 
@@ -61,7 +62,6 @@ const Header = () => {
       return `Il y a ${diffInYears} an${diffInYears > 1 ? 's' : ''}`;
     }
   };
-  
 
   const fetchNotifications = async () => {
     try {
@@ -106,6 +106,26 @@ const Header = () => {
       setUnreadCount(prevUnreadCount => prevUnreadCount - 1);
     } catch (error) {
       console.error('Erreur lors de la mise à jour de la notification:', error);
+    }
+  };
+
+  const deleteNotification = async (notificationId) => {
+    try {
+      const token = Cookies.get('token');
+      if (!token) return;
+
+      await axios.delete(`${appUrl}/notification/${notificationId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
+      setNotifications(prevNotifications => 
+        prevNotifications.filter(notification => notification._id !== notificationId)
+      );
+      setUnreadCount(prevUnreadCount => prevUnreadCount > 0 ? prevUnreadCount - 1 : 0);
+    } catch (error) {
+      console.error('Erreur lors de la suppression de la notification:', error);
     }
   };
 
@@ -205,6 +225,7 @@ const Header = () => {
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
                       onClose={handleCloseMenu}
+                      
                       PaperProps={{
                         style: {
                           maxHeight: 400,
@@ -223,13 +244,26 @@ const Header = () => {
                                 markNotificationAsRead(notification._id);
                                 handleCloseMenu();
                               }}
+                              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} // Ensure the X button is aligned properly
                             >
-                              <Avatar>{(notification.type && notification.type[0])}</Avatar>
-                              <ListItemText
-                                primary={notification.message}
-                                secondary={formatTimeAgo(notification.createdAt)}
-                                style={{ color: notification.read ? 'gray' : 'white' }}
-                              />
+                              <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Avatar>{(notification.type && notification.type[0])}</Avatar>
+                                <ListItemText
+                                  primary={notification.message}
+                                  secondary={formatTimeAgo(notification.createdAt)}
+                                />
+                              </div>
+                              <IconButton
+                                edge="end"
+                                aria-label="delete"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteNotification(notification._id);
+                                }}
+                                style={{ marginLeft: 'auto' }}
+                              >
+                                <CloseIcon />
+                              </IconButton>
                             </ListItem>
                           ))}
                         </List>

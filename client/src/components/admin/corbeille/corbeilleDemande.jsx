@@ -261,24 +261,24 @@ function CorbeilleDemande() {
                           borderRadius="8px"
                           boxShadow={3}
                         >
-                          <Typography variant="h6">{demandeRejet.fullName}</Typography>
-                          <Typography>Email: {demandeRejet.email}</Typography>
-                          <Typography>Téléphone: {demandeRejet.phoneNumber}</Typography>
-                          <Typography>Téléphone 2: {demandeRejet.phoneNumber2}</Typography>
-                          <Typography>Gouvernorat: {demandeRejet.gouvernorat}</Typography>
-                          <Typography>Ville: {demandeRejet.ville}</Typography>
-                          <Typography>Type Demande: {demandeRejet.typeDemande}</Typography>
+                          <Typography style={{fontFamily: 'Constantia'}} variant="h6">{demandeRejet.fullName}</Typography>
+                          <Typography style={{fontFamily: 'Constantia' ,wordWrap: 'break-word',overflow: 'hidden',textOverflow: 'ellipsis',}}>Email: {demandeRejet.email}</Typography>
+                          <Typography style={{fontFamily: 'Constantia'}}>Téléphone: {demandeRejet.phoneNumber}</Typography>
+                          <Typography style={{fontFamily: 'Constantia'}}>Téléphone 2: {demandeRejet.phoneNumber2}</Typography>
+                          <Typography style={{fontFamily: 'Constantia'}}>Gouvernorat: {demandeRejet.gouvernorat}</Typography>
+                          <Typography style={{fontFamily: 'Constantia'}}>Ville: {demandeRejet.ville}</Typography>
+                          <Typography style={{fontFamily: 'Constantia'}}>Type Demande: {demandeRejet.typeDemande}</Typography>
                           {demandeRejet.typeDemande === "CLIENT" ? (
                             <>
-                              <Typography>Metier: {demandeRejet.metier}</Typography>
-                              <Typography>Entreprise: {demandeRejet.nomEntreprise}</Typography>
-                              <Typography>Message: {demandeRejet.messageDemande}</Typography>
+                              <Typography style={{fontFamily: 'Constantia'}}>Metier: {demandeRejet.metier}</Typography>
+                              <Typography style={{fontFamily: 'Constantia'}}>Entreprise: {demandeRejet.nomEntreprise}</Typography>
+                              <Typography style={{fontFamily: 'Constantia'}}>Message: {demandeRejet.messageDemande}</Typography>
                             </>
                           ) : (
                             <>
-                              <Typography>Type Espace: {demandeRejet.typeEspace}</Typography>
-                              <Typography>Espace: {demandeRejet.espacePublicD}</Typography>
-                              <Typography>Message: {demandeRejet.messageDemande}</Typography>
+                              <Typography style={{fontFamily: 'Constantia'}}>Type Espace: {demandeRejet.typeEspace}</Typography>
+                              <Typography style={{fontFamily: 'Constantia'}}>Espace: {demandeRejet.espacePublicD}</Typography>
+                              <Typography style={{fontFamily: 'Constantia'}}>Message: {demandeRejet.messageDemande}</Typography>
                             </>
                           )}
                           <Stack direction="row" spacing={1} style={{ justifyContent: 'center', fontSize: 'small' }}>

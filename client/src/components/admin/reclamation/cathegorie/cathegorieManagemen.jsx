@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Typography, useTheme, useMediaQuery,Stack,Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useLocation, useParams,useNavigate } from "react-router-dom";
@@ -95,11 +95,33 @@ const CathegorieManagement = () => {
     return role === 'SUPERADMIN' && verified === true ;
   };
   const columns = [
-    { field: "name", headerName: "Cathégorie", flex: 1 },
+    { field: "nomCat", headerName: "Catégorie", flex: 1 },
    
 
   ];
-
+  if (shouldShowAddAdmin(role, verified)) {
+    columns.push({
+      field: "button",
+      headerName: "Actions",
+      flex: 1.5,
+      renderCell: (params) => (
+        <Stack direction="row" spacing={1} style={{ justifyContent: "center", fontSize: "small" }}>
+          <Button
+            variant="outlined"
+            class="btn btn-outline-info"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate( `/updateCategorie/${params.row._id}`);
+            }}
+            style={{ marginTop: "1vh", fontSize: "small" }}
+          >
+            Modifier
+          </Button>
+         
+        </Stack>
+      ),
+    });
+  }
   return (
     <main id="cathegories" className="cathegories">
       {shouldShowHeader && <Header />}
@@ -136,7 +158,7 @@ const CathegorieManagement = () => {
                   rows={cathegories}
                   columns={columns}
                   checkboxSelection
-                  getRowId={(row) => row.name}  style={{fontFamily: 'Constantia'}}
+                  getRowId={(row) => row.nomCat}  style={{fontFamily: 'Constantia'}}
                 />
               ) : (
                 <Box>
@@ -152,19 +174,32 @@ const CathegorieManagement = () => {
                       boxShadow={20}
                       marginTop={"2vh"}
                     >
-                      <Typography  style={{fontFamily: 'Constantia'}} variant="h6">{cathegorie.name}</Typography>
-
+                      <Typography  style={{fontFamily: 'Constantia'}} variant="h6">Catégorie: {cathegorie.nomCat}</Typography>
+                      { shouldShowAddAdmin(role,verified) && (<Stack direction="row" spacing={1} style={{ justifyContent: "center", fontSize: "small" }}>
+                      <Button
+                        variant="outlined"
+                        class="btn btn-outline-info"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate( `/updateCategorie/${cathegorie._id}`);
+                        }}
+                        style={{ marginTop: "1vh", fontSize: "small" }}
+                      >
+                        Modifier
+                      </Button>
+                      
+                    </Stack>)}
                     </Box>
                   ))}
                 </Box>
               )}
                {shouldShowAddAdmin(role,verified) && (
                 <button
-                style={{ width: "20vh", justifyItems: 'center', marginTop: '2vh' }}
+                style={{  justifyItems: 'center', marginTop: '2vh' }}
                 onClick={handleButtonClick}
                 className="btn btn-success"
               >
-                Add Cathégorie
+                Ajouter Catégorie
               </button>)
 }
             </Box>

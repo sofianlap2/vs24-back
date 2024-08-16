@@ -1,7 +1,10 @@
 // models/Reclamation.js
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const StatusEnum = {
+ENCOURS:"en cours",
+TRAITE:"traité"
+}
 const ReclamationSchema = new Schema({
   dateRec:{
     type: Date,
@@ -20,7 +23,13 @@ const ReclamationSchema = new Schema({
   description:{
     type: String,
     require:true,
-  }
+  },
+  status:{ 
+    type: String,
+    enum: Object.values(StatusEnum),
+    default: 'en cours',
+
+  },
 });
 
 const Reclamation = mongoose.model('Reclamation', ReclamationSchema);

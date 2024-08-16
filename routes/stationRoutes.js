@@ -26,15 +26,23 @@ router.post('/:email/addStation', Authorisation, asyncErrorHandler(async (req, r
   const entretienDate = new Date(dateEntretient);
   const finLocDate = new Date(dateFinLoc);
 
-  if (fabricationDate >= now) {
-    return res.status(400).json({ error: 'La date de fabrication  doit être supérieure à la date courant' });
-  }
-  if (fabricationDate >= finLocDate) {
-    return res.status(400).json({ error: 'La date de fabrication  doit être inférieur à la date fin de location' });
-  }
+  // Normalize dates to remove time component
+  const normalizeDate = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-  if (fabricationDate > entretienDate) {
-    return res.status(400).json({ error: 'La date de fabrication  doit être inférieur à la date de maintenance ' });
+  const normalizedNow = normalizeDate(now);
+  const normalizedFabricationDate = normalizeDate(fabricationDate);
+  const normalizedEntretienDate = normalizeDate(entretienDate);
+  const normalizedFinLocDate = normalizeDate(finLocDate);
+
+  // Allow fabrication date to be the same as the current date
+  if (normalizedFabricationDate < normalizedNow) {
+    return res.status(400).json({ error: 'La date de fabrication doit être supérieure ou égale à la date courante.' });
+  }
+  if (normalizedFabricationDate >= normalizedFinLocDate) {
+    return res.status(400).json({ error: 'La date de fabrication doit être inférieure à la date de fin de location.' });
+  }
+  if (normalizedFabricationDate >= normalizedEntretienDate) {
+    return res.status(400).json({ error: 'La date de fabrication doit être inférieure à la date de maintenance.' });
   }
 
   // Create a new instance of Station
@@ -54,6 +62,7 @@ router.post('/:email/addStation', Authorisation, asyncErrorHandler(async (req, r
   // Send a success response
   res.status(200).json(savedStation);
 }));
+
 
 
 
@@ -135,6 +144,67 @@ router.get('/StationsClient', Authorisation, async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const station = await Station.findById(req.params.id);
+    res.json(station);
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+});
+router.put("/updateStation/:id", asyncErrorHandler(async (req, res) => {
+  try {
+      const { id } = req.params;
+      const { numero, dateFab, dateEntretient, dateFinLoc } = req.body;
+
+      // Validate input fields
+      if (!numero) {
+          return res.status(400).json({ error: "Le numéro de la station est requis." });
+      }
+      
+      // Date validation
+      const now = new Date();
+      const fabricationDate = new Date(dateFab);
+      const entretienDate = new Date(dateEntretient);
+      const finLocDate = new Date(dateFinLoc);
+
+      // Normalize dates to remove time component
+      const normalizeDate = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+      const normalizedNow = normalizeDate(now);
+      const normalizedFabricationDate = normalizeDate(fabricationDate);
+      const normalizedEntretienDate = normalizeDate(entretienDate);
+      const normalizedFinLocDate = normalizeDate(finLocDate);
+
+      // Allow fabrication date to be the same as the current date
+      if (normalizedFabricationDate < normalizedNow) {
+        return res.status(400).json({ error: 'La date de fabrication doit être supérieure ou égale à la date courante.' });
+      }
+      if (normalizedFabricationDate >= normalizedFinLocDate) {
+        return res.status(400).json({ error: 'La date de fabrication doit être inférieure à la date de fin de location.' });
+      }
+      if (normalizedFabricationDate >= normalizedEntretienDate) {
+        return res.status(400).json({ error: 'La date de fabrication doit être inférieure à la date de maintenance.' });
+      }
+
+      // Additional validation as necessary
+
+      const updateStation = await Station.findByIdAndUpdate(
+          id,
+          { numero, dateFab, dateEntretient, dateFinLoc },
+          { new: true }
+      );
+      
+      if (!updateStation) {
+          return res.status(404).json({ error: "Station non trouvée." });
+      }
+
+      res.status(200).json(updateStation);
+  } catch (err) {
+      console.error("Erreur serveur lors de la mise à jour de la station:", err);
+      res.status(500).json({ error: "Erreur serveur, veuillez réessayer plus tard." });
+  }
+}));
 
 
 module.exports = router;
