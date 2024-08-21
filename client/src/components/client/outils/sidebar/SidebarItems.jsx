@@ -8,6 +8,9 @@ import NavGroup from './NavGroup/NavGroup';
 import {
   IconBell,
   IconBuildingSkyscraper,
+   IconChargingPile,
+   IconHelp,
+   IconHexagonLetterA,
    IconLayoutDashboard,
    IconLayoutSidebarLeftCollapse,
 } from '@tabler/icons';
@@ -94,6 +97,7 @@ const SidebarItems = () => {
       href: `/espacesClient/${window.btoa(email)}`,
     },
 
+
    // Ici, on place les éléments conditionnels à l'endroit où ils doivent apparaître
    shouldShowStation(role, verified) && {
     id: uniqueId(),
@@ -120,6 +124,43 @@ const SidebarItems = () => {
     href: `/publicitesManagementPub/${window.btoa(email)}`,
   }
 ].filter(Boolean); 
+
+
+    ...(
+      shouldShowStation(role, verified) 
+      ? [{
+          id: uniqueId(),
+          title: 'Stations',
+          icon: IconChargingPile,
+          href: `/stationsClient/${window.btoa(email)}`,
+        },
+        {
+          id: uniqueId(),
+          title: 'Questionnaire',
+          icon: IconHelp,
+          href: `/addQuestion/${window.btoa(email)}`,
+        },]
+      : []
+    ),
+    ...(
+      shouldShowEspace(role, verified) 
+      ? [{
+          id: uniqueId(),
+          title: 'Espace sans pub',
+          icon: IconBuildingSkyscraper,
+          href: `/espacesSansPub/${window.btoa(email)}`,
+        },
+        {
+          id: uniqueId(),
+          title: 'Publicité',
+          icon: IconBuildingSkyscraper,
+          href: `/publicitesManagementPub/${window.btoa(email)}`,
+        }
+      ]
+      : []
+    ),
+    
+  ];
 
   const { pathname } = useLocation();
   const pathDirect = pathname;

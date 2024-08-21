@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
+import React from "react";
+
 import {BrowserRouter as Router,Route,Routes,useParams} from "react-router-dom";
 import ModifierUser from "./components/admin/adminCrud/ModifierUser";
 import ConsulterUser from "./components/admin/adminCrud/ConsulterUser";
@@ -26,7 +25,6 @@ import Dashboard from "./components/admin/outils/dashboard/Dashboard";
 import CorbeilleDemande from "./components/admin/corbeille/corbeilleDemande";
 import AddAdmin from "./components/admin/adminCrud/addAdmin";
 import EmailVerify from "./components/admin/outils/emailVerification/verification";
-import FullLayout from "./components/client/outils/FullLayout";
 import ReclamationsManagement from "./components/admin/reclamation/reclamationManagement";
 import CathegorieManagement from "./components/admin/reclamation/cathegorie/cathegorieManagemen";
 import AddCathegorie from "./components/admin/reclamation/cathegorie/addCathegorie";
@@ -46,59 +44,18 @@ import EspaceSansPub from "./components/publicite/epaceSansPub";
 import PublicitesManagementPub from "./components/publicite/publiciteManagementPub";
 import PublicitesManagement from "./components/admin/publicites/publicitesManagement";
 import DecisionPub from "./components/admin/publicites/decisionPub";
-import DashboardClient from "./components/client/outils/dashboard/DashboardClient";
-import Publicitee from "./components/client/outils/Publicitee";
+import AddQuestion from "./components/client/question/addQuestion";
+import UpdatePub from "./components/publicite/updatePub";
+import UpdateStation from "./components/admin/station/updateStation";
+import UpdateReclamation from "./components/client/reclamations/updateReclamation";
+import UpdateReclamationStat from "./components/admin/reclamation/updateReclamationStat";
+import UpdateCategorie from "./components/admin/reclamation/cathegorie/updateCategorie";
 
 function App() {
-  const { email } = useParams();
-  const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-  const tokenValue = Cookies.get("token");
-
-  const [role, setUserRole] = useState("");
-  const [verified, setVerified] = useState();
-
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${appUrl}/users/${email}/userRole`, {
-          headers: {
-            "Content-Type": "application/json",
-
-            Authorization: `${tokenValue}`,
-          },
-        });
-        setUserRole(response.data.role);
-      } catch (error) {
-        console.error("Failed to fetch user role:", error);
-      }
-    };
-
-    fetchUserRole();
-  }, [tokenValue, email]);
-
-  useEffect(() => {
-    const fetchVerified = async () => {
-      try {
-        const response = await axios.get(
-          `${appUrl}/users/${email}/userVerified`,
-          {
-            headers: {
-              Authorization: `${tokenValue}`,
-            },
-          }
-        );
-        setVerified(response.data.verified);
-      } catch (error) {
-        console.error("Failed to fetch user verification status:", error);
-      }
-    };
-
-    fetchVerified();
-  }, [tokenValue, email]);
 
   return (
     <Router>
-      <div>
+      
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SigninPage />} />
@@ -111,7 +68,6 @@ function App() {
 
            {/* Autorisation pour les roles superAdmin , adminPub , adminClient et adminDemande */}
 
-          {(role === "SUPERADMIN" || role === "ADMINPUB"||role === "ADMINCLIENT" || role === "ADMINDEMANDE") && verified === true ? (<>
           <Route path="/dashboard/:email" element={<Dashboard />} />
           <Route path="/addEspacePublic/:email" element={<AddEspacePublic />} />
           <Route path="/espacePublicManagement/:email" element={<EspacePublicManagement />} />
@@ -130,34 +86,34 @@ function App() {
           <Route path="/dashboard/:email" element={<Dashboard />} />
           <Route path="/pubsManagement/:email" element={<PublicitesManagement />} />
           <Route path="/decisionPub/:pubId" element={<DecisionPub />} />
+          <Route path="/updateStation/:id" element={<UpdateStation />} />
+          <Route path="/updateCategorie/:id" element={<UpdateCategorie />} />
+          <Route path="/updateReclamationStat/:id" element={<UpdateReclamationStat />} />
 
-          </>) : null}
+         
 
           {/* Autorisation pour les role client et publicitaire */}
 
-          {(role === "CLIENT" || role === "PUBLICITAIRE") && verified === true ? (<>
           <Route path="/addReclamation/:email" element={<AddReclamation />} />
           <Route path="/reclamationsClient/:email" element={<ReclamationsManagementClient />} />
-          <Route path="/dashboardClient/:email" element={<DashboardClient />} />
-          <Route path="/Publicitee/:email" element={<Publicitee />} />
-
           <Route path="/espacesClient/:email" element={<EspacesManagementClient />} />
           <Route path="/espacesSansPub/:email" element={<EspaceSansPub />} />
 
           <Route path="/stationsClient/:email" element={<StationsManagementClient />} />
           <Route path="/addPublicite/:email" element={<AddPublicite />} />
           <Route path="/publicitesManagementPub/:email" element={<PublicitesManagementPub />} />
+          <Route path="/addQuestion/:email" element={<AddQuestion />} />
+          <Route path="/updatePublicite/:id" element={<UpdatePub />} />
 
           <Route path="/passwordClient" element={<ChangePasswordClient />} />
           <Route path="/consulterClient/:email" element={<ConsulterClient />} />
           <Route path="/modifierClient/:email" element={<ModifierClient />} />
-          <Route path="/dashboardClient/:email" element={<FullLayout />} />
-          </>) : null}
+          <Route path="/updateReclamation/:id" element={<UpdateReclamation />} />
+
 
           {/* Autorisation pour le role superadmin */}
 
-          {role === "SUPERADMIN" && verified === true ? (
-            <>
+            
           <Route path="/usersManagement/:email" element={<UsersManagement />} />
           <Route path="/addAdmin/:email" element={<AddAdmin />} />
           <Route path="/archiveUsers/:email" element={<ArchiveUsers />} />
@@ -165,11 +121,11 @@ function App() {
           <Route path="/cathegorieManagement/:email" element={<CathegorieManagement />} />
           <Route path="/addCathegorie/:email" element={<AddCathegorie />} />
           <Route path="/updateUser/:userId" element={<UpdateUser />} />
-            </>) : null}
+          
 
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </div>
+     
     </Router>
   );
 }

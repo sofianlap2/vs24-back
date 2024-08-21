@@ -280,7 +280,7 @@ const UsersManagement = () => {
                       marginTop={"2vh"}
                     >
                        <Typography style={{fontFamily: 'Constantia'}} variant="h6">{user.fullName}</Typography>
-                       <Typography style={{fontFamily: 'Constantia'}}>Email: {user.email}</Typography>
+                       <Typography style={{fontFamily: 'Constantia' ,wordWrap: 'break-word',overflow: 'hidden',textOverflow: 'ellipsis',}}>Email: {user.email}</Typography>
                        <Typography style={{fontFamily: 'Constantia'}}>Téléphone: {user.phoneNumber}</Typography>
                        <Typography style={{fontFamily: 'Constantia'}}>Téléphone 2: {user.phoneNumber2}</Typography>
 

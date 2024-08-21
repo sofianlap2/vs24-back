@@ -114,8 +114,12 @@ const AddStation = () => {
       setTimeout(() => {
         navigate(`/dashboard/${window.btoa(email)}`);
       }, 2000);
-    } catch (error) {
-      toast.error("Erreur lors de l'ajout de la station");
+    } catch (error)  {
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.error );
+      } else {
+        toast.error("il y a un erreur d'ajout la station");
+      }
     }
   };
 

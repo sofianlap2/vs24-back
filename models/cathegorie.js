@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const CathegorieSchema = new  Schema({
  
-  name:{
+nomCat:{
     type: String,
     require:true,
   }

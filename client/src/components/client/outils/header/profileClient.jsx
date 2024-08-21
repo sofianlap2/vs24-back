@@ -19,7 +19,6 @@ const ProfileClient = () => {
   const [user, setUser] = useState(null);
   const [anchorEl2, setAnchorEl2] = useState(null);
   const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-
   // Retrieve email from token
   const token = Cookies.get("token");
   let email = "";
@@ -48,10 +47,13 @@ const ProfileClient = () => {
       const userData = response.data;
       setUser(userData);
     } catch (error) {
-      console.error("Error fetching user:", error);
+      console.error("Failed to fetch user:", error);
     }
   };
- // Add appUrl to dependencies just in case
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
 
   const handleLogout = async () => {
@@ -67,7 +69,7 @@ const ProfileClient = () => {
       );
       Cookies.remove("token");
     } catch (error) {
-      console.error("Error during logout:", error);
+      console.error("Erreur lors de la déconnexion :", error);
     }
   };
 
@@ -78,6 +80,7 @@ const ProfileClient = () => {
   const handleClose2 = () => {
     setAnchorEl2(null);
   };
+
 
   return (
     <Box>
@@ -200,3 +203,4 @@ const ProfileClient = () => {
 };
 
 export default ProfileClient;
+

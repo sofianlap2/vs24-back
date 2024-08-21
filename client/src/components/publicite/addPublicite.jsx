@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+
 import { useLocation, useNavigate } from "react-router-dom";
+
+import { useLocation,useNavigate } from "react-router-dom";
+
 import HeaderClient from "../client/outils/header/headerClient";
 import SidebarClient from "../client/outils/sidebar/sidebarClient";
 import "./AddPublicite.css";
@@ -18,6 +22,7 @@ const AddPublicite = () => {
   const isLoginPage = location.pathname === "/signin";
   const shouldShowHeader =
     !isLoginPage && !isRequestResetPasswordPage && !isResetPasswordPage;
+    const navigate = useNavigate(); // Initialize useNavigate hook
 
   const [formData, setFormData] = useState({
     dateDebPub: "",
