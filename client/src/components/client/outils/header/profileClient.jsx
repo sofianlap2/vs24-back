@@ -1,31 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Avatar,
-  Box,
-  Menu,
-  Button,
-  IconButton,
-  MenuItem,
-  ListItemIcon,
-  ListItemText
-} from '@mui/material';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Avatar, Box, Menu, Button, IconButton, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
-import { IconListCheck, IconMail, IconUser, IconCircleDashed } from '@tabler/icons';
+import { IconListCheck, IconMail, IconUser, IconCircleDashed } from "@tabler/icons";
 
 const ProfileClient = () => {
   const [user, setUser] = useState(null);
   const [anchorEl2, setAnchorEl2] = useState(null);
   const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-  // Retrieve email from token
-  const token = Cookies.get("token");
-  let email = "";
-  if (token) {
-    const decodedToken = jwtDecode(token);
-    email = decodedToken.email;
-  }
 
   useEffect(() => {
     fetchUser();
@@ -33,36 +17,30 @@ const ProfileClient = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(
-        `${appUrl}/users/${email}`,
-        {
+      const token = Cookies.get("token");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        const email = decodedToken.email;
+        const response = await axios.get(`${appUrl}/users/${email}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `${token}`,
           },
-        }
-      );
-      const userData = response.data;
-      setUser(userData);
+        });
+        const userData = response.data;
+        setUser(userData);
+      }
     } catch (error) {
       console.error("Failed to fetch user:", error);
     }
   };
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        `${appUrl}/logout`,
-        {},
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const token = Cookies.get("token");
+      await axios.post(`${appUrl}/logout`, {}, {
+        headers: { Authorization: `${token}` },
+      });
       Cookies.remove("token");
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
@@ -77,7 +55,6 @@ const ProfileClient = () => {
     setAnchorEl2(null);
   };
 
-
   return (
     <Box>
       <IconButton
@@ -86,57 +63,34 @@ const ProfileClient = () => {
         color="inherit"
         aria-controls="msgs-menu"
         aria-haspopup="true"
-        sx={{
-          ...(typeof anchorEl2 === 'object' && {
-            color: 'primary.main',
-          }),
-        }}
+        sx={{ ...(typeof anchorEl2 === "object" && { color: "primary.main" }) }}
         onClick={handleClick2}
       >
         {user && user.image?.data && user.image?.contentType ? (
           <Avatar
             src={`data:${user.image.contentType};base64,${user.image.data}`}
-            sx={{
-              width: 35,
-              height: 35,
-            }}
+            sx={{ width: 35, height: 35 }}
           />
         ) : (
-          <Avatar
-            src="/src/assets/man.jpg"
-            sx={{
-              width: 35,
-              height: 35,
-            }}
-          />
+          <Avatar src="/src/assets/man.jpg" sx={{ width: 35, height: 35 }} />
         )}
       </IconButton>
-
-      {/* Message Dropdown */}
       <Menu
         id="msgs-menu"
         anchorEl={anchorEl2}
         keepMounted
         open={Boolean(anchorEl2)}
         onClose={handleClose2}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        sx={{
-          '& .MuiMenu-paper': {
-            width: '200px',
-          },
-        }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        sx={{ "& .MuiMenu-paper": { width: "200px" } }}
       >
         <MenuItem>
           <ListItemIcon>
             <IconUser />
           </ListItemIcon>
           <ListItemText>
-            {user && (
-              <span style={{ fontFamily: 'Constantia' }}>
-                {user.fullName}
-              </span>
-            )}
+            {user && <span style={{ fontFamily: "Constantia" }}>{user.fullName}</span>}
           </ListItemText>
         </MenuItem>
         <MenuItem>
@@ -148,13 +102,12 @@ const ProfileClient = () => {
               style={{
                 color: user && user.verified ? "green" : "red",
                 display: "flex",
-                cursor: user && !user.verified ? "pointer" : "default", // Set cursor to pointer if not verified
-                fontFamily: 'Constantia'
+                cursor: user && !user.verified ? "pointer" : "default",
+                fontFamily: "Constantia",
               }}
               onClick={() => {
                 if (!user || !user.verified) {
-                  // Only navigate if user is not verified
-                  window.location.href = `/verification/${window.btoa(email)}`;
+                  window.location.href = `/verification/${window.btoa(user.email)}`;
                 }
               }}
             >
@@ -166,13 +119,15 @@ const ProfileClient = () => {
           <ListItemIcon>
             <IconMail width={20} />
           </ListItemIcon>
-          {email && (
+          {user && (
             <Link
-              to={`/consulterClient/${window.btoa(email)}`}
+              to={`/consulterClient/${window.btoa(user.email)}`}
               className="dropdown-item d-flex align-items-center"
-              style={{ textDecoration: 'none', color: 'inherit' }} // Ensure link styles are reset
+              style={{ textDecoration: "none", color: "inherit" }}
             >
-              <ListItemText primaryTypographyProps={{ style: { fontFamily: 'Constantia' } }}>My Account</ListItemText>
+              <ListItemText primaryTypographyProps={{ style: { fontFamily: "Constantia" } }}>
+                My Account
+              </ListItemText>
             </Link>
           )}
         </MenuItem>
@@ -183,13 +138,23 @@ const ProfileClient = () => {
           <Link
             to="/passwordClient"
             className="dropdown-item d-flex align-items-center"
-            style={{ textDecoration: 'none', color: 'inherit' }} // Ensure link styles are reset
+            style={{ textDecoration: "none", color: "inherit" }}
           >
-            <ListItemText primaryTypographyProps={{ style: { fontFamily: 'Constantia' } }}>Mot de Passe</ListItemText>
+            <ListItemText primaryTypographyProps={{ style: { fontFamily: "Constantia" } }}>
+              Mot de Passe
+            </ListItemText>
           </Link>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
-          <Button to="/" variant="outlined" color="primary" style={{ background: '#fff',fontWeight:'bold',fontFamily:'Constantia' }} component={Link} onClick={handleLogout} fullWidth>
+          <Button
+            to="/"
+            variant="outlined"
+            color="primary"
+            style={{ background: "#fff", fontWeight: "bold", fontFamily: "Constantia" }}
+            component={Link}
+            onClick={handleLogout}
+            fullWidth
+          >
             Logout
           </Button>
         </Box>

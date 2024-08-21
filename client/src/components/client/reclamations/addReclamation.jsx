@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode'; // Corrected import
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Box, Typography, Button, Stack, MenuItem, Select, TextField } from '@mui/material';
-import HeaderClient from '../outils/header/headerClient';
-import SidebarClient from '../outils/sidebar/sidebarClient';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import HeaderClient from '../outils/header/headerClient';
+import SidebarClient from '../outils/sidebar/sidebarClient';
 
 const AddReclamation = () => {
   const location = useLocation();
@@ -18,6 +17,7 @@ const AddReclamation = () => {
   const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
   const shouldShowHeader = !isLoginPage && !isRequestResetPasswordPage && !isResetPasswordPage;
   const { email } = useParams();
+  
   const [reqBody, setReqBody] = useState({
     description: '',
     cathegorie: ''
@@ -27,14 +27,18 @@ const AddReclamation = () => {
   const [selectedCategorie, setSelectedCategorie] = useState('');
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const fetchCathegorie = async () => {
+    const fetchUserAndCategories = async () => {
       try {
         const token = Cookies.get('token');
         if (!token) {
           throw new Error('Token manquant');
         }
+
+        const decodedToken = jwtDecode(token);
+        setUserId(decodedToken.id); // Store the userId
 
         const response = await axios.get(
           `${appUrl}/cathegories/${window.atob(email)}/cathegorieManagement`,
@@ -52,7 +56,7 @@ const AddReclamation = () => {
       }
     };
 
-    fetchCathegorie();
+    fetchUserAndCategories();
   }, [email, appUrl]);
 
   const handleFormSubmit = async (event) => {
@@ -63,12 +67,10 @@ const AddReclamation = () => {
         throw new Error('Token manquant');
       }
 
-      const decodedToken = jwtDecode(token); // Decode the token
-      const userId = decodedToken.id; // Extract the user ID from the decoded token
-
       await axios.post(
         `${appUrl}/reclamations/${email}/addReclamation`,
-        {userId,
+        {
+          userId, // Use the stored userId
           description: reqBody.description,
           cathegorie: selectedCategorie,
         },
@@ -84,7 +86,7 @@ const AddReclamation = () => {
         navigate(`/reclamationsClient/${window.btoa(email)}`);
       }, 2000);
     } catch (error) {
-      toast.error(error.response.data.message );
+      toast.error(error.response.data.message);
     }
   };
 
@@ -105,12 +107,12 @@ const AddReclamation = () => {
           />
         )}
         <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'center', padding: '20px' }}>
-        <form onSubmit={handleFormSubmit} style={{ maxWidth: '600px', width: '100%' }}>
-            <h3 style={{fontFamily: 'Constantia',fontWeight:"bold"}}>Créer une réclamation</h3>
+          <form onSubmit={handleFormSubmit} style={{ maxWidth: '600px', width: '100%' }}>
+            <h3 style={{ fontFamily: 'Constantia', fontWeight: "bold" }}>Créer une réclamation</h3>
             <br />
             <ToastContainer />
             <div>
-              <label style={{fontFamily: 'Constantia'}}>Catégorie:</label>
+              <label style={{ fontFamily: 'Constantia' }}>Catégorie:</label>
               <select
                 className="form-select"
                 aria-label="Default select example"
@@ -118,25 +120,24 @@ const AddReclamation = () => {
                 onChange={(e) => setSelectedCategorie(e.target.value)}
                 style={{ width: '100%', padding: '8px', marginBottom: '16px' }}
               >
-                <option style={{fontFamily: 'Constantia'}}value="" disabled selected>Select Catégorie</option>
+                <option style={{ fontFamily: 'Constantia' }} value="" disabled selected>Select Catégorie</option>
                 {cathegories.map((cathegorie) => (
-                  <option key={cathegorie._id} value={cathegorie._id} style={{fontFamily: 'Constantia'}}>{cathegorie.nomCat}</option>
+                  <option key={cathegorie._id} value={cathegorie._id} style={{ fontFamily: 'Constantia' }}>{cathegorie.nomCat}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label style={{fontFamily: 'Constantia'}}>Description:</label>
-              <textarea style={{fontFamily: 'Constantia',width: '100%', padding: '8px', marginBottom: '16px',borderColor:"#000"}}
+              <label style={{ fontFamily: 'Constantia' }}>Description:</label>
+              <textarea style={{ fontFamily: 'Constantia', width: '100%', padding: '8px', marginBottom: '16px', borderColor: "#000" }}
                 type="text"
                 value={reqBody.description}
                 onChange={(e) => setReqBody({ ...reqBody, description: e.target.value })}
-                
               />
             </div>
             <button
               type="submit"
               className="btn btn-success"
-              style={{ marginTop: '2vh' ,fontFamily: 'Constantia',fontWeight:"bold"}}
+              style={{ marginTop: '2vh', fontFamily: 'Constantia', fontWeight: "bold" }}
             >
               Ajouter Réclamation
             </button>
