@@ -9,7 +9,7 @@ import { Margin } from "@mui/icons-material";
 import zIndex from "@mui/material/styles/zIndex";
 import SidebarItems from "../sidebar/SidebarItems";
 import SidebarClient from "../sidebar/sidebarClient";
-import Chartpie from "./chartpie";
+import Chartpie from "./Chartpie";
 import ChartReclamation from "./ChartReclamation";
 import HeaderClient from "../header/headerClient";
 import Publicitee from "../Publicitee";
