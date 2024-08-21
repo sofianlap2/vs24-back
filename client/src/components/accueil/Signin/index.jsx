@@ -58,11 +58,15 @@ const SignIn = () => {
         
         if (role === "SUPERADMIN"|| role === "ADMINPUB"||role === "ADMINCLIENT" || role === "ADMINDEMANDE") {
           redirectUrl = `/dashboard/${window.btoa(email)}`;
+
+        } else if (role === "CLIENT" || role === "PUBLICITAIRE") {
+          redirectUrl = `/dashboardClient/${window.btoa(email)}`;
         } else if (role === "CLIENT") {
           redirectUrl = `/espacesClient/${window.btoa(email)}`;
         } 
         else if (role === "PUBLICITAIRE"){
             redirectUrl = `/publicitesManagementPub/${window.btoa(email)}`
+
         } else {
           throw new Error("Rôle invalide");
         }

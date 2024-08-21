@@ -27,6 +27,8 @@ const ProfileClient = () => {
     email = decodedToken.email;
   }
 
+ 
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -48,9 +50,11 @@ const ProfileClient = () => {
       console.error("Failed to fetch user:", error);
     }
   };
+
   useEffect(() => {
     fetchUser();
   }, []);
+
 
   const handleLogout = async () => {
     try {
@@ -199,3 +203,4 @@ const ProfileClient = () => {
 };
 
 export default ProfileClient;
+

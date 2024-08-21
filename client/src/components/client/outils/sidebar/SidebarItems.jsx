@@ -19,7 +19,9 @@ import { uniqueId } from 'lodash';
 const SidebarItems = () => {
   const { email } = useParams();
   const [verified, setVerified] = useState();
-  const [role, setUserRole] = useState("");
+   const [role, setUserRole] = useState("");
+  const [userData, setUserData] = useState({ role: "", verified: false });
+
   const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   const tokenValue = Cookies.get("token");
@@ -57,6 +59,8 @@ const SidebarItems = () => {
 
     fetchVerified();
   }, [tokenValue, email]);
+
+
   const shouldShowStation = (role, verified) => {
     return role === "CLIENT" && verified === true;
   };
@@ -74,7 +78,7 @@ const SidebarItems = () => {
       id: uniqueId(),
       title: 'Dashboard',
       icon: IconLayoutDashboard,
-      href: '/dashboardClient',
+      href: `/dashboardClient/${window.btoa(email)}`,
     },
     {
       navlabel: true,
@@ -92,6 +96,36 @@ const SidebarItems = () => {
       icon: IconBuildingSkyscraper,
       href: `/espacesClient/${window.btoa(email)}`,
     },
+
+
+   // Ici, on place les éléments conditionnels à l'endroit où ils doivent apparaître
+   shouldShowStation(role, verified) && {
+    id: uniqueId(),
+    title: 'Stations',
+    icon: IconBuildingSkyscraper,
+    href: `/stationsClient/${window.btoa(email)}`,
+  },
+  shouldShowStation(role, verified) && {
+    id: uniqueId(),
+      title: 'Publicitee',
+      icon: IconBuildingSkyscraper,
+      href: `/Publicitee/${window.btoa(email)}`,
+  },
+  shouldShowEspace(role, verified) && {
+    id: uniqueId(),
+    title: 'Espace sans pub',
+    icon: IconBuildingSkyscraper,
+    href: `/espacesSansPub/${window.btoa(email)}`,
+  },
+  shouldShowEspace(role, verified) && {
+    id: uniqueId(),
+    title: 'Publicité',
+    icon: IconBuildingSkyscraper,
+    href: `/publicitesManagementPub/${window.btoa(email)}`,
+  }
+].filter(Boolean); 
+
+
     ...(
       shouldShowStation(role, verified) 
       ? [{
@@ -127,6 +161,7 @@ const SidebarItems = () => {
     ),
     
   ];
+
   const { pathname } = useLocation();
   const pathDirect = pathname;
 

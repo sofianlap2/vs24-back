@@ -371,7 +371,40 @@ const getTotalCounts = async () => {
   }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  router.get("/:email/espacesPublicByGouvernorat", Authorisation, async (req, res) => {
+    try {
+        // Get the user's email from the Authorisation middleware
+        const userEmail = req.userEmail;
+ 
+        // Find the user by email
+        const user = await User.findOne({ email: userEmail });
+ 
+        // Check if the user exists
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+ 
+        // Aggregate EspacePublic by gouvernorat, filtering by the user's ID
+        const countByGouvernorat = await EspacePublic.aggregate([
+            {
+                $match: {
+                    user: user._id
+                }
+            },
+            {
+                $group: {
+                    _id: '$gouvernorat',
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+ 
+        res.json(countByGouvernorat);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch EspacePublic" });
+    }
+});
+////////////////////////////////////////////////////////////////////////////////////
 router.get("/getEspacePublic/:id", async (req, res) => {
   try {
     const espacePublic = await EspacePublic.findById(req.params.id);
@@ -486,6 +519,30 @@ router.get('/espacePubliciteManagemenet', Authorisation, async (req, res) => {
   } catch (error) {
     console.error('Error fetching filtered espaces:', error.message);
     res.status(500).json({ error: 'Failed to fetch espacePublic' });
+  }
+});
+router.get('/ClientespacePubliciteManagemenet', Authorisation, async (req, res) => {
+  try {
+    const userId = req.userId; // ID de l'utilisateur connecté
+
+    // Étape 1: Trouver tous les espaces publics créés par l'utilisateur connecté
+    const userEspaces = await EspacePublic.find({ user: userId }).select('_id');
+
+    // Étape 2: Extraire les IDs de ces espaces publics
+    const userEspaceIds = userEspaces.map(espace => espace._id);
+
+    // Étape 3: Trouver les publicités qui appartiennent à ces espaces publics et dont le statut est "Accepté"
+    const acceptedPublicites = await Publicite.find({
+      espacePublic: { $in: userEspaceIds },
+      status: 'Accepté',
+    }).populate('espacePublic').populate('user'); 
+
+   
+
+    res.status(200).json(acceptedPublicites); // Retourner les publicités filtrées
+  } catch (error) {
+    console.error('Error fetching filtered publicites:', error.message);
+    res.status(500).json({ error: 'Failed to fetch publicites' });
   }
 });
 

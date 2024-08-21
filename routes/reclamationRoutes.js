@@ -49,6 +49,60 @@ router.get('/ReclamationsClient', Authorisation, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch user Reclamations" });
   }
 });
+
+router.get('/dashboard/statsRec/:year', Authorisation, async (req, res) => {
+  try {
+    // Obtenir l'email de l'utilisateur à partir du middleware Authorisation
+    const userEmail = req.userEmail;
+
+    // Rechercher l'utilisateur par email
+    const user = await User.findOne({ email: userEmail });
+
+    // Vérifier si l'utilisateur existe
+    if (!user) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
+
+    const year = parseInt(req.params.year, 10);
+    const startDate = new Date(`${year}-01-01`);
+    const endDate = new Date(`${year}-12-31`);
+
+    // Agrégation pour obtenir les statistiques par mois, filtrée par l'utilisateur connecté
+    const statistics = await Reclamation.aggregate([
+      {
+        $match: {
+          user: user._id, // Filtrer par l'ID de l'utilisateur connecté
+          dateRec: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: { month: { $month: '$dateRec' } },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          month: '$_id.month',
+          count: 1,
+          _id: 0,
+        },
+      },
+      {
+        $sort: {
+          month: 1,
+        },
+      },
+    ]);
+
+    res.json(statistics);
+  } catch (error) {
+    res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des statistiques' });
+  }
+});
+
+
+
 router.get("/:id", async (req, res) => {
   try {
     const reclamation = await Reclamation.findById(req.params.id).populate('user').populate('cathegorie');
@@ -57,6 +111,7 @@ router.get("/:id", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
 
 router.put("/updateReclamation/:id", asyncErrorHandler(async (req, res) => {
   try {

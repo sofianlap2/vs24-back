@@ -50,6 +50,7 @@ const HeaderClient = ({ toggleMobileSidebar }) => {
         </IconButton>
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
+
           <ProfileClient />
         </Stack>
       </ToolbarStyled>

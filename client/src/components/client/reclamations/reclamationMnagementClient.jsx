@@ -80,9 +80,19 @@ const ReclamationsManagementClient = () => {
   // Define base columns without the "Actions" column
   const baseColumns = [
     { field: "dateRec", headerName: "Date Reclamation", flex: 1, renderCell: renderDateRec },
+
+   
+    { field: "cathegorie", headerName: "Catégorie", flex: 1 ,
+    renderCell: (params) => params.row.cathegorie ? params.row.cathegorie.nomCat : 'N/A'
+    },
+    { field: "description", headerName: "Description", flex: 1 },
+    { field: "status", headerName: "status", flex: 1 },
+
+
     { field: "cathegorieName", headerName: "Cathegorie", flex: 1 },
     { field: "description", headerName: "Description", flex: 1 },
     { field: "status", headerName: "Statut", flex: 1 },
+
   ];
 
   // Check if any row has a status of "en cours"
@@ -138,7 +148,7 @@ const ReclamationsManagementClient = () => {
         <div className="row">
           <div style={{ width: "100%" }}>
             <Box
-              m="11vh 10vw 0 5vw"
+              m="5vh 10vw 0 5vw"
               height="75vh"
               width="60vw"
               sx={{
@@ -161,6 +171,15 @@ const ReclamationsManagementClient = () => {
               ) : (
                 <Box>
                   {reclamations.map((r) => (
+
+                    <Box key={r.id} p={2} mb={2} bgcolor={"transparent"} borderRadius="8px" boxShadow={20}marginLeft={"10vw"}>
+                     
+                      <Typography style={{fontFamily: 'Constantia'}}>Date Reclamation: {renderDateRec({ value: r.dateRec })}</Typography>
+                      <Typography style={{fontFamily: 'Constantia'}}>Cathegorie: {r.cathegorie.nomCat}</Typography>
+                      <Typography style={{fontFamily: 'Constantia'}}>Description: {r.description}</Typography>
+                      <Typography style={{fontFamily: 'Constantia'}}>Status: {r.status}</Typography>
+
+
                     <Box
                       key={r.id}
                       p={2}
@@ -197,6 +216,7 @@ const ReclamationsManagementClient = () => {
                           </Button>
                         </Stack>
                       )}
+
                     </Box>
                   ))}
                 </Box>
