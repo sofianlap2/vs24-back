@@ -7,7 +7,7 @@ import Profile from './profile';
 import LightModeOutlinedIcon from '@mui/icons-material/LightMode';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the delete button
+import CloseIcon from '@mui/icons-material/Close';
 import { ColorModeContext, useMode } from '../../../theme';
 import io from 'socket.io-client';
 
@@ -241,10 +241,17 @@ const Header = () => {
                               key={notification._id}
                               button
                               onClick={() => {
-                                markNotificationAsRead(notification._id);
+                                if (!notification.read) {
+                                  markNotificationAsRead(notification._id);
+                                }
                                 handleCloseMenu();
                               }}
-                              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} // Ensure the X button is aligned properly
+                              style={{ 
+                                display: 'flex', 
+                                justifyContent: 'space-between', 
+                                alignItems: 'center',
+                                color: notification.read ? '#ffffff' : '#000000', // White for read, light blue for unread
+                              }}
                             >
                               <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Avatar>{(notification.type && notification.type[0])}</Avatar>

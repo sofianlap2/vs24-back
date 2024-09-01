@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useLocation,useNavigate } from "react-router-dom";
-import HeaderClient from "../client/outils/header/headerClient";
-import SidebarClient from "../client/outils/sidebar/sidebarClient";
+
 import "./AddPublicite.css";
 import { Form } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
+import HeaderPub from "../outils/header/headerPub";
+import SidebarPub from "../outils/sidebar/sidebarPub";
 
 const AddPublicite = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -134,14 +135,14 @@ const AddPublicite = () => {
   return (
     <main className="main-container">
       {shouldShowHeader && (
-        <HeaderClient
+        <HeaderPub
           toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
           toggleMobileSidebar={() => setMobileSidebarOpen(true)}
         />
       )}
       <div className="content-container">
         {shouldShowHeader && (
-          <SidebarClient
+          <SidebarPub
             isSidebarOpen={isSidebarOpen}
             isMobileSidebarOpen={isMobileSidebarOpen}
             onSidebarClose={() => setMobileSidebarOpen(false)}

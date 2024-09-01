@@ -4,9 +4,9 @@ import Cookies from "js-cookie";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import HeaderClient from "../client/outils/header/headerClient";
-import SidebarClient from "../client/outils/sidebar/sidebarClient";
 import { format, isValid, parseISO } from "date-fns";
+import HeaderPub from "../outils/header/headerPub";
+import SidebarPub from "../outils/sidebar/sidebarPub";
 
 const UpdatePub = () => {
   const location = useLocation();
@@ -122,7 +122,7 @@ const UpdatePub = () => {
   return (
     <main id="updatePublicite" className="updatePublicite">
       {shouldShowHeader && (
-        <HeaderClient
+        <HeaderPub
           toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
           toggleMobileSidebar={() => setMobileSidebarOpen(true)}
         />
@@ -130,7 +130,7 @@ const UpdatePub = () => {
 
       <div style={{ display: "flex" }}>
         {shouldShowHeader && (
-          <SidebarClient
+          <SidebarPub
             isSidebarOpen={isSidebarOpen}
             isMobileSidebarOpen={isMobileSidebarOpen}
             onSidebarClose={() => setMobileSidebarOpen(false)}

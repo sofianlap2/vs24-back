@@ -39,17 +39,26 @@ import UpdateUser from "./components/admin/adminCrud/updateUser";
 import ArchiveUsers from "./components/admin/archive/archiveUser";
 import NotFound from "./components/notFound";
 import StationsManagementClient from "./components/client/station/stationsManagementClient";
-import AddPublicite from "./components/publicite/addPublicite";
-import EspaceSansPub from "./components/publicite/epaceSansPub";
-import PublicitesManagementPub from "./components/publicite/publiciteManagementPub";
 import PublicitesManagement from "./components/admin/publicites/publicitesManagement";
 import DecisionPub from "./components/admin/publicites/decisionPub";
 import AddQuestion from "./components/client/question/addQuestion";
-import UpdatePub from "./components/publicite/updatePub";
 import UpdateStation from "./components/admin/station/updateStation";
 import UpdateReclamation from "./components/client/reclamations/updateReclamation";
 import UpdateReclamationStat from "./components/admin/reclamation/updateReclamationStat";
 import UpdateCategorie from "./components/admin/reclamation/cathegorie/updateCategorie";
+import AddPublicite from "./components/publicitaire/publicite/addPublicite";
+import PublicitesManagementPub from "./components/publicitaire/publicite/publiciteManagementPub";
+import UpdatePub from "./components/publicitaire/publicite/updatePub";
+import DashboardClient from "./components/client/outils/dashboard/dashboardClient";
+import ConsulterPublicitaire from "./components/publicitaire/pubCrud/consulterPub";
+import ModifierPublicitaire from "./components/publicitaire/pubCrud/modifierPub";
+import ChangePasswordPub from "./components/publicitaire/pubCrud/changePasswordPub";
+import UpdateReclamationPub from "./components/publicitaire/reclamations/updateReclamationPub";
+import AddReclamationPub from "./components/publicitaire/reclamations/addReclamationPub";
+import ReclamationsManagementPub from "./components/publicitaire/reclamations/reclamationMnagementPub";
+import DashboardPub from "./components/publicitaire/outils/dashboard/dashboardPub";
+import EspacesManagementPub from "./components/publicitaire/espacePublic/espaceManagementPub";
+import Publicitee from "./components/client/outils/publicitee";
 
 function App() {
 
@@ -97,18 +106,19 @@ function App() {
           <Route path="/addReclamation/:email" element={<AddReclamation />} />
           <Route path="/reclamationsClient/:email" element={<ReclamationsManagementClient />} />
           <Route path="/espacesClient/:email" element={<EspacesManagementClient />} />
-          <Route path="/espacesSansPub/:email" element={<EspaceSansPub />} />
 
           <Route path="/stationsClient/:email" element={<StationsManagementClient />} />
           <Route path="/addPublicite/:email" element={<AddPublicite />} />
-          <Route path="/publicitesManagementPub/:email" element={<PublicitesManagementPub />} />
+          <Route path="/publicitesManagementPub/:email" element={<PublicitesManagementPub/>} />
           <Route path="/addQuestion/:email" element={<AddQuestion />} />
           <Route path="/updatePublicite/:id" element={<UpdatePub />} />
-
+          <Route path="/Publicitee/:email" element={<Publicitee />} />
+ 
           <Route path="/passwordClient" element={<ChangePasswordClient />} />
           <Route path="/consulterClient/:email" element={<ConsulterClient />} />
           <Route path="/modifierClient/:email" element={<ModifierClient />} />
           <Route path="/updateReclamation/:id" element={<UpdateReclamation />} />
+          <Route path="/passwordPub" element={<ChangePasswordPub />} />
 
 
           {/* Autorisation pour le role superadmin */}
@@ -121,7 +131,17 @@ function App() {
           <Route path="/cathegorieManagement/:email" element={<CathegorieManagement />} />
           <Route path="/addCathegorie/:email" element={<AddCathegorie />} />
           <Route path="/updateUser/:userId" element={<UpdateUser />} />
-          
+          <Route path="/dashboardClient/:email" element={<DashboardClient />} />
+
+<Route path="/consulterPubliciaire/:email" element={<ConsulterPublicitaire />} />
+<Route path="/modifierPubliciaire/:email" element={<ModifierPublicitaire />} />
+<Route path="/updateReclamationPub/:id" element={<UpdateReclamationPub />} />
+<Route path="/addReclamationPub/:email" element={<AddReclamationPub />} />
+<Route path="/ReclamationsPub/:email" element={<ReclamationsManagementPub />}></Route>
+<Route path="/dashboardPub/:email" element={<DashboardPub />} />
+<Route path="/espacesPub/:email" element={<EspacesManagementPub />} />
+
+
 
           <Route path="*" element={<NotFound />} />
         </Routes>

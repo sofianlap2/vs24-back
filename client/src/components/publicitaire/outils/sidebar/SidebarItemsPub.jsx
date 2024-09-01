@@ -16,12 +16,12 @@ import {
 } from '@tabler/icons';
 import {  useParams } from "react-router-dom";
 import { uniqueId } from 'lodash';
-const SidebarItems = () => {
+const SidebarItemsPub = () => {
   const { email } = useParams();
   const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   const tokenValue = Cookies.get("token");
-
+ 
   const Menuitems = [
   
     {
@@ -33,7 +33,7 @@ const SidebarItems = () => {
       id: uniqueId(),
       title: 'Dashboard',
       icon: IconLayoutDashboard,
-      href: `/dashboardClient/${window.btoa(email)}`,
+      href: `/dashboardPub/${window.btoa(email)}`,
     },
     {
       navlabel: true,
@@ -43,32 +43,22 @@ const SidebarItems = () => {
       id: uniqueId(),
       title: 'Reclamations',
       icon: IconBell,
-      href: `/ReclamationsClient/${window.btoa(email)}`,
+      href: `/ReclamationsPub/${window.btoa(email)}`,
     },
     {
       id: uniqueId(),
       title: 'Espaces',
       icon: IconBuildingSkyscraper,
-      href: `/espacesClient/${window.btoa(email)}`,
+      href: `/espacesPub/${window.btoa(email)}`,
     },
-    {
-          id: uniqueId(),
-          title: 'Stations',
-          icon: IconChargingPile,
-          href: `/stationsClient/${window.btoa(email)}`,
-        },
+
         {
           id: uniqueId(),
-          title: 'Questionnaire',
-          icon: IconHelp,
-          href: `/addQuestion/${window.btoa(email)}`,
-        },
-        {
-          id: uniqueId(),
-          title: 'Publicitee',
+          title: 'Publicité',
           icon: IconBuildingSkyscraper,
-          href: `/Publicitee/${window.btoa(email)}`,
+          href: `/publicitesManagementPub/${window.btoa(email)}`,
         }
+     
     
   ];
   const { pathname } = useLocation();
@@ -94,4 +84,4 @@ const SidebarItems = () => {
     </Box>
   );
 };
-export default SidebarItems;
+export default SidebarItemsPub;

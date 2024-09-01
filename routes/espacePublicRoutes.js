@@ -8,16 +8,16 @@ const Authorisation = require("../security/authorisation");
 const asyncErrorHandler = require('../security/asyncErrorHandler');
 const Station = require('../models/station');
 // const Station = require('../models/station');
-
+ 
 router.post('/:email/addEspacePublic', asyncErrorHandler( async (req, res) => {
-  
+ 
     // Validate user input (optional but recommended)
     if (!req.body.nomEspace || !req.body.gouvernorat || !req.body.ville || !req.body.user || !req.body.typeEspace) {
       return res.status(400).json({ error: 'Missing required fields in request body' });
     }
-
+ 
     const { nomEspace, gouvernorat, ville, user, typeEspace } = req.body;
-
+ 
     // Check for duplicate EspacePublic
     const existingEspacePublic = await EspacePublic.findOne({
       nomEspace,
@@ -25,14 +25,14 @@ router.post('/:email/addEspacePublic', asyncErrorHandler( async (req, res) => {
       ville,
       user
     }).collation({ locale: 'fr', strength: 2 });
-
+ 
     if (existingEspacePublic) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         status: 'ERROR',
-        message: 'Espace Public avec ces détails existe déjà' 
+        message: 'Espace Public avec ces détails existe déjà'
       });
     }
-
+ 
     // Create a new instance of EspacePublic using data from request body
     const newEspacePublic = new EspacePublic({
       nomEspace,
@@ -41,19 +41,19 @@ router.post('/:email/addEspacePublic', asyncErrorHandler( async (req, res) => {
       typeEspace,
       user, // Assuming user ID is in request body
     });
-
+ 
     // Save the new instance to the database
     const savedEspacePublic = await newEspacePublic.save();
-
+ 
     // Send a success response
     res.status(200).json(savedEspacePublic);
-  
+ 
 }));
-
-
+ 
+ 
 router.get("/espacePublicManagement", Authorisation, async (req, res) => {
   try {
-    const espacePublic = await EspacePublic.find().populate('user'); 
+    const espacePublic = await EspacePublic.find().populate('user');
     res.json(espacePublic);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch EspacePublic" });
@@ -63,7 +63,7 @@ router.get('/:email/espaceForStation', Authorisation, async (req, res) => {
   try {
     // Find users with role 'client' (lowercase for consistency)
     const espaces = await EspacePublic.find();
-
+ 
     // Send response with users
     res.json(espaces);
   } catch (error) {
@@ -75,18 +75,18 @@ router.get('/:email/espaceFilterForStation', Authorisation, async (req, res) => 
   try {
     const { gouvernorat, ville,typeEspace } = req.query;
     let filter = {};
-
+ 
     if (gouvernorat) {
       filter.gouvernorat = gouvernorat;
     }
-
+ 
     if (ville) {
       filter.ville = ville;
     }
     if (typeEspace) {
       filter.typeEspace = typeEspace;
     }
-
+ 
     const espaces = await EspacePublic.find(filter);
     res.json(espaces);
   } catch (error) {
@@ -97,19 +97,19 @@ router.get('/espaceFilterFordemandePub', async (req, res) => {
   try {
     const { gouvernorat, ville,typeEspace } = req.query;
     let filter = {};
-
+ 
     if (gouvernorat) {
       filter.gouvernorat = gouvernorat;
     }
-
+ 
     if (ville) {
       filter.ville = ville;
     }
     if (typeEspace) {
       filter.typeEspace = typeEspace;
     }
-    
-
+   
+ 
     const espaces = await EspacePublic.find(filter);
     res.json(espaces);
   } catch (error) {
@@ -155,19 +155,19 @@ router.get('/cities/:gouvernorat', async (req, res) => {
 //   try {
 //     const {espacePublic } = req.query;
 //     let filter = {};
-
+ 
 //     if (espacePublic) {
 //       filter.espacePublic = espacePublic;
 //     }
-
+ 
 //     const stationE = await Station.find(filter);
 //     res.json(stationE);
 //   } catch (error) {
 //     res.status(500).json({ error: "Failed to fetch espacePublic" });
 //   }
 // });
-
-
+ 
+ 
 router.get("/:email/geographieChart",Authorisation, async (req, res) => {
     try {
         const countByGouvernorat = await EspacePublic.aggregate([
@@ -178,7 +178,7 @@ router.get("/:email/geographieChart",Authorisation, async (req, res) => {
                 }
             }
         ]);
-
+ 
         res.json(countByGouvernorat);
     } catch (err) {
         res.status(500).json({ error: "Failed to fetch EspacePublic" });
@@ -186,7 +186,7 @@ router.get("/:email/geographieChart",Authorisation, async (req, res) => {
 });
 router.delete("/:_id", (req, res) => {
   const { _id } = req.params;
-
+ 
   EspacePublic.findOneAndDelete({ _id })
       .then((espacePublic) => {
           if (!espacePublic) {
@@ -201,11 +201,11 @@ router.delete("/:_id", (req, res) => {
 ///////////////////////////////////////////////////////////////////////////////////////
 router.get('/statistics1/:gouvernorat', async (req, res) => {
   const gouvernorat = req.params.gouvernorat;
-  
+ 
   if (!gouvernorat) {
     return res.status(400).send("Gouvernorat manquant.");
   }
-
+ 
   try {
     console.log("Gouvernorat reçu :", gouvernorat);
     const stats = await getStatisticsByGouvernoratAndType1(gouvernorat);
@@ -216,9 +216,9 @@ router.get('/statistics1/:gouvernorat', async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la récupération des statistiques." });
   }
 });
-
+ 
 const getStatisticsByGouvernoratAndType1 = async(gouvernorat)=>{
-
+ 
   try{
       const stats =EspacePublic.aggregate([
         {
@@ -239,13 +239,13 @@ const getStatisticsByGouvernoratAndType1 = async(gouvernorat)=>{
         },
         {
           $sort:{typeEspace : 1}
-
+ 
         }
-        
+       
       ]);
       console.log('statistics avant retour ',stats);
       return stats;
-
+ 
   }
   catch(error){
     console.error("erreur lors de l' aggregation de statistics ");
@@ -261,7 +261,7 @@ router.get('/statistics', async (req, res) => {
     res.status(500).send("Erreur lors de la récupération des statistiques.");
   }
 });
-
+ 
 const getStatisticsByGouvernoratAndType = async () => {
   try {
     const statistics = await EspacePublic.aggregate([
@@ -283,7 +283,7 @@ const getStatisticsByGouvernoratAndType = async () => {
         $sort: { gouvernorat: 1, typeEspace: 1 }
       }
     ]);
-
+ 
     return statistics;
   } catch (error) {
     console.error("Erreur lors de l'agrégation des statistiques :", error);
@@ -291,8 +291,8 @@ const getStatisticsByGouvernoratAndType = async () => {
   }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+ 
+ 
 const getStatisticsStationByGouvernoratAndType = async (gouvernorat) => {
   try {
     const statistics = await Station.aggregate([
@@ -331,14 +331,14 @@ const getStatisticsStationByGouvernoratAndType = async (gouvernorat) => {
         $sort: { gouvernorat: 1, typeEspace: 1 }
       }
     ]);
-
+ 
     return statistics;
   } catch (error) {
     console.error("Erreur lors de l'agrégation des statistiques :", error);
     throw error;
   }
 };
-
+ 
 router.get('/getStatisticsStationByGouvernoratAndType/:gouvernorat', async (req, res) => {
   const { gouvernorat } = req.params;
   try {
@@ -348,7 +348,7 @@ router.get('/getStatisticsStationByGouvernoratAndType/:gouvernorat', async (req,
     res.status(500).send("Erreur lors de la récupération des statistiques.");
   }
 });
-
+ 
 //////////////////////////////////////////////////////////////////////////
 router.get('/getTotalCounts', async (req, res) => {
   try {
@@ -358,12 +358,12 @@ router.get('/getTotalCounts', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des totaux', error });
   }
 });
-
+ 
 const getTotalCounts = async () => {
   try {
     const totalEspacesPublics = await EspacePublic.countDocuments();
     const totalStations = await Station.countDocuments();
-
+ 
     return { totalEspacesPublics, totalStations };
   } catch (error) {
     console.error("Erreur lors de la récupération des totaux :", error);
@@ -371,7 +371,40 @@ const getTotalCounts = async () => {
   }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  router.get("/:email/espacesPublicByGouvernorat", Authorisation, async (req, res) => {
+    try {
+        // Get the user's email from the Authorisation middleware
+        const userEmail = req.userEmail;
+ 
+        // Find the user by email
+        const user = await User.findOne({ email: userEmail });
+ 
+        // Check if the user exists
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+ 
+        // Aggregate EspacePublic by gouvernorat, filtering by the user's ID
+        const countByGouvernorat = await EspacePublic.aggregate([
+            {
+                $match: {
+                    user: user._id
+                }
+            },
+            {
+                $group: {
+                    _id: '$gouvernorat',
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+ 
+        res.json(countByGouvernorat);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch EspacePublic" });
+    }
+});
+////////////////////////////////////////////////////////////////////////////////////
 router.get("/getEspacePublic/:id", async (req, res) => {
   try {
     const espacePublic = await EspacePublic.findById(req.params.id);
@@ -388,11 +421,11 @@ router.put("/updateEspacePublic/:id", async (req, res) => {
       req.body,     // The updated data will be in req.body
       { new: true } // Return the updated document
     );
-    
+   
     if (!updatedEspacePublic) {
       return res.status(404).json({ msg: 'EspacePublic not found' });
     }
-
+ 
     res.json(updatedEspacePublic);
   } catch (err) {
     res.status(500).send("Server Error");
@@ -404,7 +437,7 @@ router.get('/EspacesClient', Authorisation, async (req, res) => {
     const userEspaces = await EspacePublic.find({ user: req.userId })
        // Populate the cathegorie field if needed
       .exec();
-
+ 
     // Send a success response with the user's reclamations
     res.status(200).json(userEspaces);
   } catch (error) {
@@ -415,10 +448,10 @@ router.get('/EspacesPublicitaire', async (req, res) => {
   try {
     const espaces = await EspacePublic.find({});
     const ads = await Publicite.find({}).select('espacePublic -_id');
-
+ 
     // Flatten the array of espacePublic in advertisements
     const usedEspacePublics = ads.flatMap(ad => ad.espacePublic);
-
+ 
     res.status(200).send({ espaces, usedEspacePublics });
   } catch (error) {
     res.status(500).send({ error: 'Error fetching public spaces and advertisements' });
@@ -428,65 +461,98 @@ router.get('/espaceFilterForPublicite', Authorisation, asyncErrorHandler(async (
  
     const userEmail = req.userEmail; // Assuming userEmail is available in the request object
     const { gouvernorat, ville, typeEspace } = req.query;
-
+ 
     // Fetch the user ID based on the email
     const user = await User.findOne({ email: userEmail });
-
+ 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-
+ 
     const userId = user._id;
-
+ 
     let filter = {};
-
+ 
     if (gouvernorat) {
       filter.gouvernorat = gouvernorat;
     }
-
+ 
     if (ville) {
       filter.ville = ville;
     }
-
+ 
     if (typeEspace) {
       filter.typeEspace = typeEspace;
     }
-
+ 
     // Find all Publicites created by the current user
     const userPublicites = await Publicite.find({ user: userId });
-
+ 
     // Extract espacePublic IDs from these Publicites
     const userEspaceIds = userPublicites.map(ad => ad.espacePublic).flat();
-
+ 
     // Find EspacePublic that are not in userEspaceIds and apply filter
     const espaces = await EspacePublic.find({
       ...filter,
       _id: { $nin: userEspaceIds }
     });
-
+ 
     res.json(espaces);
-  
+ 
 }));
-
-
+ 
+ 
 router.get('/espacePubliciteManagemenet', Authorisation, async (req, res) => {
   try {
     const userId = req.userId; // Assuming userId is available in the request object
-
+ 
     // Find all Publicites created by the current user
     const userPublicites = await Publicite.find({ user: userId });
-
+ 
     // Extract espacePublic IDs from these Publicites
     const userEspaceIds = userPublicites.map(ad => ad.espacePublic).flat();
-
+ 
     // Fetch details of each Espace based on the extracted IDs
     const userEspaces = await EspacePublic.find({ _id: { $in: userEspaceIds } });
-
+ 
     res.json(userEspaces);
   } catch (error) {
     console.error('Error fetching filtered espaces:', error.message);
     res.status(500).json({ error: 'Failed to fetch espacePublic' });
   }
 });
+router.get('/ClientespacePubliciteManagemenet', Authorisation, async (req, res) => {
+  try {
+    const userId = req.userId; // ID de l'utilisateur connecté
 
+    // Step 1: Find all public spaces created by the connected user
+    const userEspaces = await EspacePublic.find({ user: userId }).select('_id');
+
+    // Step 2: Extract the IDs of these public spaces
+    const userEspaceIds = userEspaces.map(espace => espace._id);
+
+    // Step 3: Initialize an array to store the accepted advertisements
+    const acceptedPublicites = [];
+
+    // Step 4: Loop through each EspacePublic ID and fetch the associated Publicite entities
+    for (const espaceId of userEspaceIds) {
+      // Fetch the Publicite entities that belong to the current EspacePublic and have the status "Accepté" or "Terminé"
+      const publicites = await Publicite.find({
+        espacePublic: espaceId,
+        status: { $in: ['Accepté', 'Terminé'] },
+      }).populate('espacePublic').populate('user');
+
+      // Add the fetched Publicite entities to the acceptedPublicites array
+      acceptedPublicites.push(...publicites);
+    }
+
+    // Return the filtered advertisements
+    res.status(200).json(acceptedPublicites);
+  } catch (error) {
+    console.error('Error fetching filtered publicites:', error.message);
+    res.status(500).json({ error: 'Failed to fetch publicites' });
+  }
+});
+
+ 
 module.exports = router;

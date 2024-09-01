@@ -106,34 +106,21 @@ router.get("/:id/verify/:token/", async (req, res) => {
   }
 });
 
-router.get("/:email", Authorisation, (req, res) => {
-  const { email } = req.params;
 
-  User.findOne({ email })
-    .then((user) => {
-      if (!user) {
-        return res.sendStatus(404);
-      }
-      res.json(user);
-    })
-    .catch((error) => {
-      res.sendStatus(500);
-    });
-});
-router.get("/:email", Authorisation, (req, res) => {
-  const { email } = req.params;
+router.get("/:email", Authorisation, async (req, res) => {
+  try {
+    const { email } = req.params;
+    const user = await User.findOne({ email });
 
-  User.findOne({ email })
-    .then((user) => {
-      if (!user) {
-        return res.sendStatus(404);
-      }
-      res.json(user);
-    })
-    .catch((error) => {
-      res.sendStatus(500);
-    });
+    if (!user) {
+      return res.sendStatus(404);
+    }
+    res.json(user);
+  } catch (error) {
+    res.sendStatus(500);
+  }
 });
+
 
 router.put("/:email", Authorisation, async (req, res) => {
   const { email } = req.params;

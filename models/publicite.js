@@ -22,7 +22,6 @@ const PubliciteSchema = new  Schema({
   },
   espacePublic:[{
     type: mongoose.Types.ObjectId,
-    require:true,
     ref:'EspacePublic'
   }],
   user:{

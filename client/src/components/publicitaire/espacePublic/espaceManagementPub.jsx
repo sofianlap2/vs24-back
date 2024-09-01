@@ -4,12 +4,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { tokens } from "../../../theme";
+import HeaderPub from "../outils/header/headerPub";
+import SidebarPub from "../outils/sidebar/sidebarPub";
 
-import { tokens } from "../../theme";
-import HeaderClient from "../client/outils/header/headerClient";
-import SidebarClient from "../client/outils/sidebar/sidebarClient";
-
-const EspaceSansPub = () => {
+const EspacesManagementPub = () => {
   const { email } = useParams();
   const navigate = useNavigate();
   const appUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -29,48 +28,12 @@ const EspaceSansPub = () => {
   const colors = tokens(theme.palette.mode);
   const tokenValue = Cookies.get("token");
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [role, setUserRole] = useState("");
-  const [verified, setVerified] = useState();
-
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${appUrl}/users/${email}/userRole`, {
-          headers: {
-            Authorization: `${tokenValue}`,
-          },
-        });
-        setUserRole(response.data.role);
-      } catch (error) {
-        console.error("Failed to fetch user role:", error);
-      }
-    };
-
-    fetchUserRole();
-  }, [tokenValue, email]);
-
-  useEffect(() => {
-    const fetchVerified = async () => {
-      try {
-        const response = await axios.get(`${appUrl}/users/${email}/userVerified`, {
-          headers: {
-            Authorization: `${tokenValue}`,
-          },
-        });
-        setVerified(response.data.verified);
-      } catch (error) {
-        console.error("Failed to fetch user verification status:", error);
-      }
-    };
-
-    fetchVerified();
-  }, [tokenValue, email]);
 
   useEffect(() => {
     const fetchEspaces = async () => {
       try {
-      
-          const response = await axios.get(`${appUrl}/espacePublic/espaceFilterForPublicite`, {
+       
+          const response = await axios.get(`${appUrl}/espacePublic/espacePubliciteManagemenet`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `${tokenValue}`,
@@ -89,10 +52,13 @@ const EspaceSansPub = () => {
       }
     };
 
-    if (email && role && verified) {
+   
+      
+    
+    if (email) {
       fetchEspaces();
     }
-  }, [email, tokenValue, role, verified]);
+  }, []);
 
   const columns = [
     { field: "nomEspace", headerName: "Nom espace", flex: 1 },
@@ -104,11 +70,11 @@ const EspaceSansPub = () => {
   return (
     <main style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {shouldShowHeader && (
-        <HeaderClient toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
+        <HeaderPub toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
       )}
       <div style={{ display: 'flex' }}>
         {shouldShowHeader && (
-          <SidebarClient
+          <SidebarPub
             isSidebarOpen={isSidebarOpen}
             isMobileSidebarOpen={isMobileSidebarOpen}
             onSidebarClose={() => setMobileSidebarOpen(false)}
@@ -159,4 +125,4 @@ const EspaceSansPub = () => {
   );
 };
 
-export default EspaceSansPub;
+export default EspacesManagementPub;

@@ -178,6 +178,21 @@ router.post('/updateExpiredPublicites', Authorisation, async (req, res) => {
     res.status(500).json({ error: 'Failed to update status of expired publicites' });
   }
 });
-
+router.delete("/:_id", async (req, res) => {
+  const { _id } = req.params;
+ 
+  try {
+    const publicite = await Publicite.findOneAndDelete({ _id });
+ 
+    if (!publicite) {
+      return res.status(404).json({ error: "User not found" });
+    }
+ 
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 module.exports = router;

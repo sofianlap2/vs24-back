@@ -28,56 +28,14 @@ const EspacesManagementClient = () => {
   const colors = tokens(theme.palette.mode);
   const tokenValue = Cookies.get("token");
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [role, setUserRole] = useState("");
-  const [verified, setVerified] = useState();
-
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${appUrl}/users/${email}/userRole`, {
-          headers: {
-            Authorization: `${tokenValue}`,
-          },
-        });
-        setUserRole(response.data.role);
-      } catch (error) {
-        console.error("Failed to fetch user role:", error);
-      }
-    };
-
-    fetchUserRole();
-  }, [tokenValue, email]);
-
-  useEffect(() => {
-    const fetchVerified = async () => {
-      try {
-        const response = await axios.get(`${appUrl}/users/${email}/userVerified`, {
-          headers: {
-            Authorization: `${tokenValue}`,
-          },
-        });
-        setVerified(response.data.verified);
-      } catch (error) {
-        console.error("Failed to fetch user verification status:", error);
-      }
-    };
-
-    fetchVerified();
-  }, [tokenValue, email]);
 
   useEffect(() => {
     const fetchEspaces = async () => {
       try {
-        let endpoint = '';
+       
 
-        if (role === "CLIENT" && verified) {
-          endpoint = `${appUrl}/espacePublic/EspacesClient`;
-        } else if (role === "PUBLICITAIRE" && verified) {
-          endpoint = `${appUrl}/espacePublic/espacePubliciteManagemenet`;
-        }
-
-        if (endpoint) {
-          const response = await axios.get(endpoint, {
+        
+          const response = await axios.get(`${appUrl}/espacePublic/EspacesClient`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `${tokenValue}`,
@@ -90,16 +48,16 @@ const EspacesManagementClient = () => {
           }));
 
           setEspaces(espacesWithIds);
-        }
+        
       } catch (error) {
         console.error("Error fetching espaces:", error);
       }
     };
 
-    if (email && role && verified) {
+    if (email) {
       fetchEspaces();
     }
-  }, [email, tokenValue, role, verified]);
+  }, []);
 
   const columns = [
     { field: "nomEspace", headerName: "Nom espace", flex: 1 },

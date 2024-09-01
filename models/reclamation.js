@@ -18,7 +18,6 @@ const ReclamationSchema = new Schema({
   cathegorie:{
     type: mongoose.Types.ObjectId,
     ref:'Cathegorie',
-    require:true,
   },
   description:{
     type: String,

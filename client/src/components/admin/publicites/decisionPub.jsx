@@ -161,7 +161,7 @@ const DecisionPub = () => {
             <br />
             {renderVideo()}
             <br />
-            {reqBody.status === "En attente" ? (
+          
               <div>
                 <label style={{ fontFamily: "Constantia" }}>Status:</label>
                 <select
@@ -169,7 +169,7 @@ const DecisionPub = () => {
                   value={reqBody.status}
                   onChange={(e) => setReqBody({ ...reqBody, status: e.target.value })}
                 >
-                  <option style={{ fontFamily: "Constantia" }} value="" disabled>
+                  <option style={{ fontFamily: "Constantia" }} value="" disabled selected>
                     Status
                   </option>
                   <option style={{ fontFamily: "Constantia" }} value="Accepté">
@@ -191,11 +191,7 @@ const DecisionPub = () => {
                   Modifier Publicité
                 </button>
               </div>
-            ) : (
-              <p>
-                <strong style={{ fontFamily: "Constantia" }}>Status:</strong> {reqBody.status}
-              </p>
-            )}
+            
           </form>
         </div>
       </div>
