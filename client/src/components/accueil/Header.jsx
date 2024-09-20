@@ -76,11 +76,11 @@ const Header = ({toggle}) => {
             <NavMenu>
             <NavItem><NavLinks to="Home" >Accueil</NavLinks></NavItem>
               <NavItem><NavLinks to="services" >Services</NavLinks></NavItem>
-              <NavItem><NavLinks to="products" >Produits</NavLinks></NavItem>
+              {/* <NavItem><NavLinks to="products" >Produits</NavLinks></NavItem> */}
               <NavItem><NavLinks to="valeurs" >Valeurs</NavLinks></NavItem>
-              <NavItem><NavLinks to="testimonials" >Témoignages</NavLinks></NavItem>
+              {/* <NavItem><NavLinks to="testimonials" >Témoignages</NavLinks></NavItem>
               <NavItem><NavLinks to="FAQ" >FAQ</NavLinks></NavItem>
-              <NavItem><NavLinks to="map" >Emplacement</NavLinks></NavItem>
+              <NavItem><NavLinks to="map" >Emplacement</NavLinks></NavItem> */}
 
               <NavItem><NavLinks to="contact" >Contact</NavLinks></NavItem>
             </NavMenu>

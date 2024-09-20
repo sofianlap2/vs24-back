@@ -21,12 +21,12 @@ const Sidebar = ({ isOpen, toggle }) => {
         <SidebarMenu>
           <SidebarLink to='Home' onClick={toggle}>Accueil</SidebarLink>
           <SidebarLink to='services' onClick={toggle}>Services</SidebarLink>
-          <SidebarLink to='products' onClick={toggle}>Produits</SidebarLink>
+          {/* <SidebarLink to='products' onClick={toggle}>Produits</SidebarLink> */}
 
           <SidebarLink to='valeurs' onClick={toggle}>Valeurs</SidebarLink>
-          <SidebarLink to='testimonials' onClick={toggle}>Témoignages</SidebarLink>
+          {/* <SidebarLink to='testimonials' onClick={toggle}>Témoignages</SidebarLink>
           <SidebarLink to='FAQ' onClick={toggle}>FAQ</SidebarLink>
-          <SidebarLink to='map' onClick={toggle}>Emplacement</SidebarLink>
+          <SidebarLink to='map' onClick={toggle}>Emplacement</SidebarLink> */}
 
           <SidebarLink to='contact' onClick={toggle}>Contact</SidebarLink>
         </SidebarMenu>
