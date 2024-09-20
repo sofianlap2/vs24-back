@@ -31,7 +31,7 @@ function HeroSection() {
         </button>
 <br/>
         <div className="hero-buttons">
-          {/* <button className="cta-button primary">Demander Un Devis</button> */}
+          <button className="cta-button primary">Demander Un Devis</button>
           <button className="cta-button secondary" onClick={scrollToJoinSection}>
             Rejoignez-nous
           </button>
