@@ -149,23 +149,74 @@ router.get("/getPubPub/:id", async (req, res) => {  try {
 
 
 
-
-// Update the status of a specific publicite
-router.put("/updatePub/:id", Authorisation, async (req, res) => {
+router.put("/updateStatus/:id", asyncErrorHandler(async (req, res) => {
   try {
-    const updatedPub = await Publicite.findByIdAndUpdate(
+    const updateStatus = await Publicite.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
-    if (!updatedPub) {
-      return res.status(400).json({ msg: 'Publicité non trouvée' });
+    if (!updateStatus) {
+      return res.status(400).json({ message: 'Publicité non trouvée' });
     }
-    res.json(updatedPub);
+    res.json(updateStatus);
   } catch (err) {
     res.status(500).send("Server Error");
   }
-});
+}));
+// Update the status of a specific publicite
+router.put('/updatePub/:id', Authorisation, upload.single('video'), asyncErrorHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { dateDebPub, dateFinPub } = req.body;
+    const publicite = await Publicite.findById(id).populate({
+      path: 'user',
+      select: 'fullName' // Specify the fields you want to include
+    });
+
+    if (!publicite) {
+      return res.status(404).json({ msg: 'Publicité non trouvée' });
+    }
+
+    // Check if the status is 'En attente' or 'Accepté'
+    if (publicite.status === 'En attente' || publicite.status === 'Accepté') {
+
+      // Update the video if a new video is uploaded
+      if (req.file) {
+        publicite.video = {
+          data: req.file.buffer,
+          contentType: req.file.mimetype,
+        };
+
+        // Reset the status to 'En attente' after video update
+        publicite.status = 'En attente';
+
+        // Create a notification for admin about the video update
+        const notification = new Notification({
+          type: 'updateVideo',
+          referenceId: publicite.id,
+          message: `La vidéo de la publicité de ${publicite.user.fullName} a été mise à jour.`,
+        });
+
+        await notification.save();
+        req.io.emit('notification', notification); // Notify admin in real-time
+      }
+
+      // Update other fields like dateDebPub and dateFinPub if provided
+      if (dateDebPub) publicite.dateDebPub = dateDebPub;
+      if (dateFinPub) publicite.dateFinPub = dateFinPub;
+      await publicite.save();
+
+      res.status(200).json({ message: 'Publicité mise à jour avec succès', publicite });
+    } else {
+      res.status(400).json({ message: 'La publicité ne peut pas être modifiée.' });
+    }
+  } catch (error) {
+    console.error('Error updating publicite:', error);
+    res.status(500).json({ error: 'Erreur lors de la mise à jour de la publicité.' });
+  }
+}));
+
 router.post('/updateExpiredPublicites', Authorisation, async (req, res) => {
   try {
     const currentDate = new Date();

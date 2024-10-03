@@ -21,15 +21,15 @@ function HomePage() {
         <HeroSection />
         <ValueAddedSection />
         <OurServices />
-        {/* <RecentProducts /> */}
+        <RecentProducts />
         <OurValues />
         
-        {/* <Testimonials />
+        <Testimonials />
         
 
         <FAQ />
 
-        <WhereWeAre /> */}
+        <WhereWeAre />
 
         <ContactForm />
       </main>

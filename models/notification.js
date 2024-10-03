@@ -6,7 +6,7 @@ const NotificationSchema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: ['demande', 'reclamation','stopPub'],
+    enum: ['demande', 'reclamation','stopPub','updateVideo'],
   },
   referenceId: {
     type: Schema.Types.ObjectId,

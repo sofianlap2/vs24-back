@@ -53,7 +53,7 @@ const DecisionPub = () => {
       console.log("Status to update:", reqBody.status);
 
       await axios.put(
-        `${appUrl}/publicites/updatePub/${pubId}`,
+        `${appUrl}/publicites/updateStatus/${pubId}`,
         { status: reqBody.status },
         {
           headers: {
@@ -62,10 +62,10 @@ const DecisionPub = () => {
           },
         }
       );
-
+console.log(reqBody.status)
       toast.success("Publicité mise à jour avec succès");
       setTimeout(() => {
-        navigate(`/admin/dashboard/${window.btoa(email)}`);
+        navigate(`/admin/pubsManagement/${window.btoa(email)}`);
       }, 3000);
     } catch (error) {
       console.error("Error updating publicite:", error);
@@ -159,22 +159,21 @@ const DecisionPub = () => {
             <br />
           
               <div>
-                <label >Status:</label>
-                <select
-                  className="form-select"
-                  value={reqBody.status}
-                  onChange={(e) => setReqBody({ ...reqBody, status: e.target.value })}
-                >
-                  <option  value="" disabled selected>
-                    Status
-                  </option>
-                  <option  value="Accepté">
-                    Accepté
-                  </option>
-                  <option  value="Refusé">
-                    Refusé
-                  </option>
-                </select>
+              <label>Status:</label>
+<select
+  className="form-select"
+  value={reqBody.status || ""}
+  onChange={(e) =>
+    setReqBody({ ...reqBody, status: e.target.value })
+  }
+>
+  <option value="" disabled>
+    Status
+  </option>
+  <option value="Accepté">Accepté</option>
+  <option value="Refusé">Refusé</option>
+</select>
+
                 <button
                   type="submit"
                   className="btn btn-success"

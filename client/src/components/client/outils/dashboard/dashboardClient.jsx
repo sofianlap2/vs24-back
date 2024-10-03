@@ -41,7 +41,7 @@ const DashboardClient = () => {
     chart: {
       height: "300px",
   //    maxWidth: isMobile ? "27vw" : "40vw",
-      marginLeft: isMobile ? "1vw" : "10vw",
+      marginLeft: isMobile ? "1vw" : "0vw",
       zIndex:20,
       
     },

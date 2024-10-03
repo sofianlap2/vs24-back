@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -20,6 +19,7 @@ const UpdatePub = () => {
     status: "",
     video: null,
   });
+  const [videoFile, setVideoFile] = useState(null);
 
   useEffect(() => {
     const fetchPubliciteDetails = async () => {
@@ -49,17 +49,22 @@ const UpdatePub = () => {
     event.preventDefault();
 
     try {
+      const formData = new FormData();
+      formData.append("status", reqBody.status);
+      formData.append("dateDebPub", reqBody.dateDebPub);
+      formData.append("dateFinPub", reqBody.dateFinPub);
+      
+      if (videoFile) {
+        formData.append("video", videoFile);
+      }
+
       const token = Cookies.get("token");
       await axios.put(
         `${appUrl}/publicites/updatePub/${id}`,
-        {
-          status: reqBody.status,
-          dateDebPub: reqBody.dateDebPub,
-          dateFinPub: reqBody.dateFinPub,
-        },
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: ` ${token}`,
           },
         }
@@ -67,10 +72,10 @@ const UpdatePub = () => {
 
       toast.success("Publicité mise à jour avec succès");
       setTimeout(() => {
-        navigate(`/publicitesManagementPub/${window.btoa(email)}`);
+        navigate(`/pub/publicitesManagementPub/${window.btoa(email)}`);
       }, 3000);
     } catch (error) {
-      toast.error("Erreur lors de la mise à jour de la publicité");
+      toast.error(error.response.data.message);
     }
   };
 
@@ -80,6 +85,10 @@ const UpdatePub = () => {
       ...prevReqBody,
       [name]: value,
     }));
+  };
+
+  const handleVideoChange = (event) => {
+    setVideoFile(event.target.files[0]);
   };
 
   const renderDateRec = (params) => {
@@ -112,93 +121,77 @@ const UpdatePub = () => {
 
   return (
     <main id="updatePublicite" className="updatePublicite">
-     *
       <div style={{ display: "flex" }}>
-     
         <div style={{ justifyContent: "center", display: "flex" }}>
-          
-            <form
-              onSubmit={handleFormSubmit}
-              style={{ marginTop: "15vh", marginLeft: "25vw", width: "60%" }}
-            >
-              <h3 style={{ fontFamily: "Constantia", fontWeight: "bold" }}>
-                Mettre à jour une publicité
-              </h3>
-              <br />
-              <ToastContainer />
+          <form
+            onSubmit={handleFormSubmit}
+            style={{ marginTop: "15vh", marginLeft: "25vw", width: "60%" }}
+          >
+            <h3 style={{ fontFamily: "Constantia", fontWeight: "bold" }}>
+              Mettre à jour une publicité
+            </h3>
+            <br />
+            <ToastContainer />
 
-              <ul>
-                {reqBody.espacePublic.map((espace, index) => (
-                  <li key={index}>
-                    <p >
-                      <strong>Nom de l'espace:</strong> {espace.nomEspace}
-                    </p>
-                    <p >
-                      <strong>Type d'espace:</strong> {espace.typeEspace}
-                    </p>
-                    <p >
-                      <strong>Gouvernorat:</strong> {espace.gouvernorat}
-                    </p>
-                    <p >
-                      <strong>Ville:</strong> {espace.ville}
-                    </p>
-                  </li>
-                ))}
-              </ul>
+            <ul>
+              {reqBody.espacePublic.map((espace, index) => (
+                <li key={index}>
+                  <p><strong>Nom de l'espace:</strong> {espace.nomEspace}</p>
+                  <p><strong>Type d'espace:</strong> {espace.typeEspace}</p>
+                  <p><strong>Gouvernorat:</strong> {espace.gouvernorat}</p>
+                  <p><strong>Ville:</strong> {espace.ville}</p>
+                </li>
+              ))}
+            </ul>
 
-              <p>
-                <strong >Date début Publicité:</strong> {renderDateRec({ value: reqBody.dateDebPub })}
-              </p>
-              <p>
-                <strong >Date fin Publicité:</strong> {renderDateRec({ value: reqBody.dateFinPub })}
-              </p>
-              <p>
-                <strong >Status:</strong> {reqBody.status}
-              </p>
-              <br />
+            <p><strong>Date début Publicité:</strong> {renderDateRec({ value: reqBody.dateDebPub })}</p>
+            <p><strong>Date fin Publicité:</strong> {renderDateRec({ value: reqBody.dateFinPub })}</p>
+            <p><strong>Status:</strong> {reqBody.status}</p>
+            <br />
 
-              {reqBody.status === "En attente" && (
-                <>
-                  <label>Date de début de publication:</label>
-                  <input
-                    type="date"
-                    name="dateDebPub"
-                    value={reqBody.dateDebPub}
-                    onChange={handleInputChange}
-                    required
-                    className="form-control"
-                  />
-                  <label>Date de fin de publication:</label>
-                  <input
-                    type="date"
-                    name="dateFinPub"
-                    value={reqBody.dateFinPub}
-                    onChange={handleInputChange}
-                    required
-                    className="form-control"
-                  />
-                  <br />
-                </>
-              )}
+            {renderVideo()}
+            <br />
 
-              {renderVideo()}
-              <br />
+            {(reqBody.status === "En attente" || reqBody.status === "Accepté") && (
+              <>
+                <label>Modifier la vidéo:</label>
+                <input type="file" name="video" onChange={handleVideoChange} accept="video/*" className="form-control" />
+                <br />
+              </>
+            )}
 
-              {/* Render button only if status is 'En attente' */}
-              {reqBody.status === "En attente" && (
-                <button
-                  type="submit"
-                  className="btn btn-success"
-                  style={{
-                    marginTop: "2vh",
-                        fontWeight: "bold",
-                  }}
-                >
-                  Modifier Publicité
-                </button>
-              )}
-            </form>
-          
+            {reqBody.status === "En attente" && (
+              <>
+                <label>Date de début de publication:</label>
+                <input
+                  type="date"
+                  name="dateDebPub"
+                  value={reqBody.dateDebPub}
+                  onChange={handleInputChange}
+                  className="form-control"
+                />
+                <label>Date de fin de publication:</label>
+                <input
+                  type="date"
+                  name="dateFinPub"
+                  value={reqBody.dateFinPub}
+                  onChange={handleInputChange}
+                  className="form-control"
+                />
+                <br />
+              </>
+            )}
+
+            {(reqBody.status === "En attente" || reqBody.status === "Accepté") && (
+              <button
+                type="submit"
+                className="btn btn-success"
+                style={{ marginTop: "2vh", fontWeight: "bold" }}
+              >
+                Modifier Publicité
+              </button>
+            )}
+          </form>
         </div>
       </div>
     </main>
